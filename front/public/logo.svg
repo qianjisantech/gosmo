@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="69px" height="77px" viewBox="0 0 69 77" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 4备份</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#00A2FF" offset="0%"></stop>
+            <stop stop-color="#0069FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#00A2FF" offset="0%"></stop>
+            <stop stop-color="#0069FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="3" transform="translate(-143, -517)">
+            <g id="编组-5" transform="translate(100, 477)">
+                <g id="编组-4备份" transform="translate(43.5215, 40)">
+                    <path d="M35.6361593,0 L68.4077253,18.9483187 L68.4077253,58.8067782 L35.6361593,77 L22.4568521,72.6007543 L22.456,59.744 L11.5252683,65.5120786 L0,58.5137065 L0,19.3176567 L11.526906,12.6255316 L22.456,18.119 L22.4568521,5.91975728 L35.6361593,0 Z" id="形状结合" fill="url(#linearGradient-1)"></path>
+                    <path d="M11.5281329,13.2239787 C11.5281329,13.2239787 15.1710393,15.0857079 22.4568521,18.8091663 L22.4603464,33.5194217 L11.568558,33.5194217 C11.541608,19.9891263 11.5281329,13.2239787 11.5281329,13.2239787 Z" id="路径-2" fill="#FFFFFF"></path>
+                    <polygon id="路径-3" fill="#FFFFFF" points="22.4192477 59.1911347 11.5252683 64.9278994 11.5252683 44.5999698 22.4192477 44.5999698"></polygon>
+                    <polygon id="路径-5" fill="#FFFFFF" points="35.6233503 0.590750142 35.6233503 76.3570319 67.8288899 58.4225649 67.8288899 19.2155324"></polygon>
+                    <polygon id="路径-6" fill="url(#linearGradient-2)" points="44.4592368 17.5992243 44.4592368 60.0703818 58.1349447 52.5304063 58.1349447 25.2711781"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
