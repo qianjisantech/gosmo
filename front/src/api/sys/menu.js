@@ -1,8 +1,8 @@
 import request from '@/utils/axios.js'
 
-export function getMenuQueryPage (body) {
+export function getMenuPage (body) {
   return request({
-    url: '/sys/menu/queryPage',
+    url: '/sys/menu/page',
     method: 'post',
     data:body
   })

@@ -1,8 +1,8 @@
 import request from '@/utils/axios'
 
-export function getApplicationQueryPage (body) {
+export function getApplicationPage (body) {
     return request({
-        url: '/basicdata/application/queryPage',
+        url: '/basicdata/application/page',
         method: 'post',
         data:body
     })

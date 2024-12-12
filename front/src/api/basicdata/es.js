@@ -1,8 +1,8 @@
 import request from '@/utils/axios'
 
-export function getEsQueryPage (body) {
+export function getEsPage (body) {
     return request({
-        url: '/basicdata/es/queryPage',
+        url: '/basicdata/es/page',
         method: 'post',
         data:body
     })

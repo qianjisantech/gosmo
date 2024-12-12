@@ -132,7 +132,7 @@
 import { ref, reactive, computed, unref, onMounted, h } from 'vue';
 import PageHeader from '@/components/PageHeader.vue';
 import { Table, message, Modal } from 'ant-design-vue';
-import { getRoleQueryPage, createRole, updateRole, deleteRole, batchEnableRole, batchDisableRole } from '@/api/sys/role'
+import { getRolePage, createRole, updateRole, deleteRole, batchEnableRole, batchDisableRole } from '@/api/sys/role'
 import { cloneDeep, isEmpty } from '@/utils/util';
 import { PlusOutlined, DownOutlined, CheckOutlined, StopOutlined } from '@ant-design/icons-vue';
 import type { TableColumnsType, MenuProps } from 'ant-design-vue';
@@ -230,7 +230,7 @@ const loadingData = () => {
   params['page'] = pagination.current
   params['page_size'] = pagination.pageSize
 
-  getRoleQueryPage(queryBody).then(response => {
+  getRolePage(queryBody).then(response => {
     const result = response.data;
     dataSource.value = result.data;
     pagination.total = result.total;

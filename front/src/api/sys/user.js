@@ -23,9 +23,9 @@ export function changeCurrentUserPassword (body) {
   })
 }
 
-export function getUserQueryPage (body) {
+export function getUserPage (body) {
   return request({
-    url: '/sys/user/queryPage',
+    url: '/sys/user/page',
     method: 'post',
     data: body
   })

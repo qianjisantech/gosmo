@@ -87,7 +87,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import PageHeader from '@/components/PageHeader.vue';
 import type { TableColumnsType } from 'ant-design-vue';
-import { getOpsLogQueryPage } from '@/api/sys/log'
+import { getOpsLogPage } from '@/api/sys/log'
 import { SearchOutlined } from '@ant-design/icons-vue';
 import type { searchDataType, tableDataType, creatorTableDataType } from './types'
 import SelectorModal from './SelectorModal.vue'
@@ -182,7 +182,7 @@ const loadingData = () => {
   params['page'] = pagination.current;
   params['page_size'] = pagination.pageSize;
 
-  getOpsLogQueryPage(queryBody).then(response => {
+  getOpsLogPage(queryBody).then(response => {
     const result = response.data;
     dataSource.value = result.data;
     pagination.total = result.total;

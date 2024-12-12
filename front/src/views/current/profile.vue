@@ -90,7 +90,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import PageHeader from '@/components/PageHeader.vue';
 import { ref, reactive, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
@@ -101,20 +101,14 @@ import storage from 'store'
 import request from "@/utils/axios"
 import md5 from "md5"
 import { updateCurrentUserInfo, changeCurrentUserPassword } from '@/api/sys/user'
+import {InfoForm} from "@/views/current/types";
 
 
-export default {
-  name: "Profile",
-  components: {
-    PageHeader: PageHeader,
-    UploadOutlined: UploadOutlined
-  },
 
-  setup() {
     const passwordChanging = ref(false);
     const selectedKeys = ref<string[]>(['1']);
 
-    const infoFormState = reactive({});
+    const infoFormState = reactive<InfoForm>({});
     const passwordFormState = ref({});
 
     const avatarFileList = ref([]);
@@ -194,18 +188,6 @@ export default {
       initInfoForm();
     })
 
-    return {
-      passwordChanging,
-      selectedKeys,
-      infoFormState,
-      passwordFormState,
-      avatarFileList,
-      uploadHeaders,
-      menuClick,
-      onInfoFormFinish,
-      onPasswordFormFinish,
-      avatarHandleChange
-    }
   },
 };
 </script>

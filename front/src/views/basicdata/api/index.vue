@@ -132,13 +132,13 @@
 import { ref, reactive, computed, unref, onMounted, h } from 'vue';
 import PageHeader from '@/components/PageHeader.vue';
 import { Table, message, Modal } from 'ant-design-vue';
-import { getPositionQueryPage, createPosition, updatePosition, deletePosition, batchEnablePosition, batchDisablePosition } from '@/api/sys/position'
-import { getApiQueryPage } from '@/api/basicdata/api'
+import { getPositionPage, createPosition, updatePosition, deletePosition, batchEnablePosition, batchDisablePosition } from '@/api/sys/position'
+import { getApiPage } from '@/api/basicdata/api'
 
 import { cloneDeep, isEmpty } from '@/utils/util';
 import { PlusOutlined, DownOutlined, CheckOutlined, StopOutlined } from '@ant-design/icons-vue';
 import type { TableColumnsType, MenuProps } from 'ant-design-vue';
-import type { searchDataType, tableDataType } from './types'
+import type { SearchDataType, TableDataType } from '@/common/types'
 
 const createForm = ref();
 const updateForm = ref();
@@ -147,9 +147,9 @@ const openModal = ref(false);
 const modalTitle = ref('');
 const modalSubmitLoading = ref(false);
 const detailStateLoading = ref(false);
-const dataSource = ref<tableDataType[]>([]);
-const selectedRowKeys = ref<tableDataType['id'][]>([]);
-const formState: searchDataType = reactive({
+const dataSource = ref<TableDataType[]>([]);
+const selectedRowKeys = ref<TableDataType['id'][]>([]);
+const formState: SearchDataType = reactive({
   name: "",
   available: "true"
 });
@@ -235,7 +235,7 @@ const loadingData = () => {
   params['page'] = pagination.current
   params['page_size'] = pagination.pageSize
 
-  getApiQueryPage(queryBody).then(response => {
+  getApiPage(queryBody).then(response => {
     const result = response.data;
     dataSource.value = result.data;
     pagination.total = result.total;

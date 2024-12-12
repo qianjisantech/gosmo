@@ -1,8 +1,8 @@
 import request from '@/utils/axios.js'
 
-export function getOpsLogQueryPage (body) {
+export function getOpsLogPage (body) {
   return request({
-    url: '/log/ops/queryPage',
+    url: '/log/ops/page',
     method: 'post',
     data: body
   })

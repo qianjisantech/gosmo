@@ -135,7 +135,7 @@ import { message, Modal } from 'ant-design-vue';
 import { PlusOutlined, DownOutlined, CheckOutlined, StopOutlined, ArrowsAltOutlined, ShrinkOutlined, SwapOutlined } from '@ant-design/icons-vue';
 import PageHeader from '@/components/PageHeader.vue'
 import { listToTree } from '@/utils/util';
-import { getDeptQueryPage, createDept, updateDept, deleteDept, batchEnableDept, batchDisableDept } from '@/api/sys/dept';
+import { getDeptPage, createDept, updateDept, deleteDept, batchEnableDept, batchDisableDept } from '@/api/sys/dept';
 import type { MenuProps } from 'ant-design-vue';
 import type { treeDataType } from './types';
 import { cloneDeep, isEmpty } from '@/utils/util';
@@ -177,7 +177,7 @@ const queryParams= reactive({
 const loadingData = () => {
    treeLoading.value = true;
 
-    getDeptQueryPage(queryParams).then(response => {
+    getDeptPage(queryParams).then(response => {
     const result = response.data;
     dataSource = result.data;
     dataSource.forEach((item: treeDataType) => {

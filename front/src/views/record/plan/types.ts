@@ -15,3 +15,7 @@ export interface MatchTableColumn {
     matchMode: string
     matchValue: string
 }
+
+export interface QueryForm {
+
+}

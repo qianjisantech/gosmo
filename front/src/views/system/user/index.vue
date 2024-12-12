@@ -249,7 +249,7 @@
 import { ref, reactive, computed, unref, onMounted, h } from 'vue';
 import PageHeader from '@/components/PageHeader.vue';
 import { Table, message, Modal } from 'ant-design-vue';
-import { getUserQueryPage, createUser, updateUser, deleteUser, batchEnableUser, batchDisableUser } from '@/api/sys/user'
+import { getUserPage, createUser, updateUser, deleteUser, batchEnableUser, batchDisableUser } from '@/api/sys/user'
 import { getDeptOptions } from '@/api/sys/dept'
 import { isEmpty, listToTree } from '@/utils/util';
 import { PlusOutlined, DownOutlined, CheckOutlined, StopOutlined, SearchOutlined } from '@ant-design/icons-vue';
@@ -407,7 +407,7 @@ const loadingData = () => {
     deptTreeData.value = listToTree(result.data);
   })
 
-  getUserQueryPage(queryBody).then(response => {
+  getUserPage(queryBody).then(response => {
     const result = response.data;
     dataSource.value = result.data.map((item: tableDataType) => {
       item.roleNames = item.roles ? item.roles.map(item => item.name).join("，") : undefined;

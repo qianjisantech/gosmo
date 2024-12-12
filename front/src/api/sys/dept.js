@@ -1,8 +1,8 @@
 import request from '@/utils/axios.js'
 
-export function getDeptQueryPage (body) {
+export function getDeptPage (body) {
   return request({
-    url: '/sys/user/dept/queryPage',
+    url: '/sys/user/dept/page',
     method: 'post',
     data:body
   })

@@ -57,7 +57,7 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, unref } from 'vue';
 import type { TableColumnsType } from 'ant-design-vue';
-import { getUserQueryPage } from '@/api/sys/user'
+import { getUserPage } from '@/api/sys/user'
 import type { searchCreatorDataType, creatorTableDataType } from './types'
 
 
@@ -111,7 +111,7 @@ const loadingData = () => {
   params['page'] = pagination.current
   params['page_size'] = pagination.pageSize
 
-  getUserQueryPage(params).then(response => {
+  getUserPage(params).then(response => {
     const result = response.data;
     dataSource.value = result.data;
     pagination.total = result.total;

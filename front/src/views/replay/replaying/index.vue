@@ -132,8 +132,8 @@
 import { ref, reactive, computed, unref, onMounted, h } from 'vue';
 import PageHeader from '@/components/PageHeader.vue';
 import { Table, message, Modal } from 'ant-design-vue';
-import { getPositionQueryPage, createPosition, updatePosition, deletePosition, batchEnablePosition, batchDisablePosition } from '@/api/sys/position'
-import { getEsQueryPage } from '@/api/basicdata/es'
+import { getPositionPage, createPosition, updatePosition, deletePosition, batchEnablePosition, batchDisablePosition } from '@/api/sys/position'
+import { getEsPage } from '@/api/basicdata/es'
 
 import { cloneDeep, isEmpty } from '@/utils/util';
 import { PlusOutlined, DownOutlined, CheckOutlined, StopOutlined } from '@ant-design/icons-vue';
@@ -235,7 +235,7 @@ const loadingData = () => {
   params['page'] = pagination.current
   params['page_size'] = pagination.pageSize
 
-  getEsQueryPage(queryBody).then(response => {
+  getEsPage(queryBody).then(response => {
     const result = response.data;
     dataSource.value = result.data;
     pagination.total = result.total;

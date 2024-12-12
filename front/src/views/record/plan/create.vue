@@ -118,7 +118,7 @@ const createPlanForm = reactive<CreatePlanForm>({
   duration: 1,
 })
 const matchTableData = reactive<MatchTableColumn[]>([
-  {
+  { id:"11111",
     matchMode: "全文",
     matchValue: "demo"
   },
@@ -132,9 +132,9 @@ const rules = reactive<FormRules<CreatePlanForm>>({
     {required: true, message: '执行模式必选', trigger: 'blur'},
   ],
   project: [
-    {required: true, message: '项目必选', trigger: 'change',},
+    {required: true, message: '项目必选', trigger: 'blur',},
   ],
-  machine: [{required: true, message: '执行机必选', trigger: 'change',},
+  machine: [{required: true, message: '执行机必选', trigger: 'blur',},
   ],
   duration: [{required: true, message: '持续时间必填', trigger: 'change',},
   ],

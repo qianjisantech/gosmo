@@ -1,8 +1,8 @@
 import request from '@/utils/axios.js'
 
-export function getRoleQueryPage (body) {
+export function getRolePage (body) {
   return request({
-    url: '/sys/user/role/queryPage',
+    url: '/sys/user/role/page',
     method: 'post',
     data: body
   })

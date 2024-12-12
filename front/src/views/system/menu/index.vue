@@ -284,7 +284,7 @@
 import { ref, reactive, computed, unref, h, onMounted, watch } from 'vue';
 import PageHeader from '@/components/PageHeader.vue';
 import { message, Modal } from 'ant-design-vue';
-import { getMenuQueryPage, createMenu, updateMenu, deleteMenu, batchEnableMenu, batchDisableMenu } from '@/api/sys/menu'
+import { getMenuPage, createMenu, updateMenu, deleteMenu, batchEnableMenu, batchDisableMenu } from '@/api/sys/menu'
 import { listToTree, cloneDeep, isEmpty } from '@/utils/util';
 import type { TableColumnsType, MenuProps } from 'ant-design-vue';
 import * as icons from '@ant-design/icons-vue';
@@ -395,7 +395,7 @@ const queryPage=reactive({
 const loadingData = () => {
   tableLoading.value = true;
 
-  getMenuQueryPage(queryPage).then(response => {
+  getMenuPage(queryPage).then(response => {
     const result = response.data;
     menuSelectorTreeData.value = listToTree(result.data.filter((item) => item.type !== 3));
     menuTreeData.value = listToTree(result.data);

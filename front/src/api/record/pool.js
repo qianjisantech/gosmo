@@ -1,8 +1,8 @@
 import request from '@/utils/axios'
 
-export function getPoolQueryPage (body) {
+export function getPoolPage (body) {
     return request({
-        url: '/record/pool/queryPage',
+        url: '/record/pool/page',
         method: 'post',
         data:body
     })

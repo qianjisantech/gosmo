@@ -1,8 +1,8 @@
 import request from '@/utils/axios'
 
-export function getPlanQueryPage (body) {
+export function getPlanPage (body) {
     return request({
-        url: '/record/plan/queryPage',
+        url: '/record/plan/page',
         method: 'post',
         data:body
     })
