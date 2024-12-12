@@ -103,8 +103,6 @@ import md5 from "md5"
 import { updateCurrentUserInfo, changeCurrentUserPassword } from '@/api/sys/user'
 import {InfoForm} from "@/views/current/types";
 
-
-
     const passwordChanging = ref(false);
     const selectedKeys = ref<string[]>(['1']);
 
@@ -188,8 +186,6 @@ import {InfoForm} from "@/views/current/types";
       initInfoForm();
     })
 
-  },
-};
 </script>
 
 <style lang="scss" scoped>
