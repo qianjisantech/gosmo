@@ -3,8 +3,9 @@
     <a-layout-header class="header" style="display: flex">
       <div class="left-header">
         <a-button type="link" class="logo-btn">
-          <a-image src="/logo.svg" :preview="false" :width="28" :height="28" />
-          <h1 style="margin-left: 10px;">千机伞</h1>
+<!--          <a-image src="/logo.svg" :preview="false" :width="28" :height="28" />-->
+           <el-text class="art-text">GOSMO</el-text>
+<!--          <h1 style="margin-left: 10px;">千机伞</h1>-->
         </a-button>
       </div>
       <div style="flex: 1 0 0%"></div>
@@ -209,5 +210,13 @@ const menuGenerator = (routers) => {
 }
 :deep(.ant-layout-sider-children .ant-menu-light:not(.ant-menu-horizontal) .ant-menu-submenu-title:active) {
   background-color: rgba(0, 0, 0, 0.15);
+}
+.art-text {
+  font-size: 2rem; /* 文字大小 */
+  font-weight: bold; /* 加粗 */
+  font-style: italic; /* 斜体 */
+  color: #409EFF; /* 黑色文字 */
+  text-transform: uppercase; /* 全部大写 */
+  position: relative;
 }
 </style>

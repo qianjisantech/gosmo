@@ -4,13 +4,15 @@
       <a-layout-content :style="contentStyle">
         <div class="header">
           <div class="logo">
-            <a-image src="/logo.svg" :preview="false" />
+<!--            <a-image src="/logo.svg" :preview="false" />-->
           </div>
-          <div class="title">千机伞</div>
+          <div class="title">
+            <div class="art-text">
+            <span>GOSMO</span>
+          </div></div>
         </div>
-<!--        <div class="desc"></div>-->
 
-        <div class="login-main" style="width: 330px; margin: 0 auto;">
+        <div class="login-main" style="width: 330px; margin: 1vh auto;">
           <a-tabs centered>
             <a-tab-pane :key="1" tab="账户密码登录">
               <a-form
@@ -179,10 +181,10 @@ const onFinish = (values: loginFormType) => {
       height: 44px;
       margin-inline-end: 16px;
     }
-    .title {
-      font-size: 33px;
-      font-weight: 650;
-    }
+    //.title {
+    //  font-size: 33px;
+    //  font-weight: 650;
+    //}
   }
 }
 .login-form-button {
@@ -201,4 +203,14 @@ const onFinish = (values: loginFormType) => {
 :deep(.ant-input-group .ant-input-group-addon) {
   padding: 0;
 }
+.art-text {
+  margin: 10vh;
+  font-size: 5rem; /* 文字大小 */
+  font-weight: bold; /* 加粗 */
+  font-style: italic; /* 斜体 */
+  color: #409EFF; /* 黑色文字 */
+  text-transform: uppercase; /* 全部大写 */
+  position: relative;
+}
+
 </style>
