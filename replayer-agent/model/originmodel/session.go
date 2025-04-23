@@ -1,8 +1,8 @@
 package originmodel
 
 import (
-	"github.com/didi/sharingan/replayer-agent/model/esmodel"
 	"github.com/json-iterator/go"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/esmodel"
 )
 
 func RetrieveSession(data []byte) (esmodel.Session, error) {

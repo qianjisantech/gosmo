@@ -7,10 +7,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/conf"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/httpclient"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/conf"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/httpclient"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 )
 
 const (

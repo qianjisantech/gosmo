@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/model/esmodel"
-	"github.com/didi/sharingan/replayer-agent/utils/fastcgi"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/esmodel"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/fastcgi"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 )
 
 type SearchRecord struct {
@@ -68,7 +68,7 @@ func retrieveSessions(ctx context.Context, project string, body []byte, flowList
 	return flowList
 }
 
-//handleOneSessionRaw 处理原始流量，只处理一个session
+// handleOneSessionRaw 处理原始流量，只处理一个session
 func handleOneSessionRaw(ctx context.Context, sess esmodel.Session, project string) *SearchRecord {
 	req, res, valid := uniform(ctx, sess)
 	if !valid {

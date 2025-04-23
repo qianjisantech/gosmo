@@ -3,8 +3,8 @@ package esmodel
 import (
 	"net"
 
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 )
 
 func RetrieveSessions(data []byte) ([]Session, error) {

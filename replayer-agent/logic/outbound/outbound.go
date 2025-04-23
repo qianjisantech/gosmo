@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/logic/match"
-	"github.com/didi/sharingan/replayer-agent/logic/replayed"
-	"github.com/didi/sharingan/replayer-agent/model/replaying"
-	"github.com/didi/sharingan/replayer-agent/model/station"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/match"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/replayed"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/replaying"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/station"
 )
 
 const (

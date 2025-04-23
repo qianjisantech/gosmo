@@ -1,4 +1,4 @@
-// Replayer demo for how to import package "github.com/didi/sharingan/replayer"
+// Replayer demo for how to import package "github.com/qianjisantech/gosmo/replayer"
 package main
 
 import (
@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	// Here to import package
-	_ "github.com/didi/sharingan"
+	_ "github.com/qianjisantech/gosmo"
 	// TODO：Attention please! 最后import其他业务包！
 )
 

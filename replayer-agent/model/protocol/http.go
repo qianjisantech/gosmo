@@ -16,8 +16,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/conf"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/conf"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 )
 
 var textprotoReaderPool sync.Pool

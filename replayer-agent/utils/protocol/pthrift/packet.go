@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/didi/sharingan/replayer-agent/model/recording"
-	"github.com/didi/sharingan/replayer-agent/utils/protocol/helper"
 	"github.com/modern-go/parse"
 	"github.com/modern-go/parse/model"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/recording"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/protocol/helper"
 )
 
 type messageBody struct {
@@ -420,7 +420,7 @@ func ReplaceSequenceId(request []byte, callOutbound *recording.CallOutbound) {
 	}
 
 	seqId := thrift["sequence_id"]
-	seqIdBytes ,err := helper.IntToBytes(seqId.(int), 4)
+	seqIdBytes, err := helper.IntToBytes(seqId.(int), 4)
 	if err != nil {
 		return
 	}

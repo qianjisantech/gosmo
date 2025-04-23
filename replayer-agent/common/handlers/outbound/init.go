@@ -5,10 +5,10 @@ import (
 	"log"
 	"net"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/conf"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/ignore"
-	"github.com/didi/sharingan/replayer-agent/logic/outbound"
-	"github.com/didi/sharingan/replayer-agent/logic/outbound/match"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/conf"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/ignore"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/outbound"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/outbound/match"
 )
 
 var BasePort int

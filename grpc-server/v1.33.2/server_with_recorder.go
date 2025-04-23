@@ -1,3 +1,4 @@
+//go:build recorder_grpc
 // +build recorder_grpc
 
 package grpc
@@ -12,7 +13,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
 
-	"github.com/didi/sharingan/recorder/koala_grpc/hook"
+	"github.com/qianjisantech/gosmo/recorder/koala_grpc/hook"
 )
 
 const (

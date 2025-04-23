@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/didi/sharingan/replayer-agent/utils/protocol/pmysql/common"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/protocol/pmysql/common"
 
 	"github.com/modern-go/parse"
 	"github.com/modern-go/parse/model"

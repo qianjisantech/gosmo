@@ -11,9 +11,9 @@ import (
 	"path"
 	"time"
 
-	"github.com/didi/sharingan/recorder"
-	"github.com/didi/sharingan/recorder/koala/recording"
-	"github.com/didi/sharingan/recorder/utils"
+	"github.com/qianjisantech/gosmo/recorder"
+	"github.com/qianjisantech/gosmo/recorder/koala/recording"
+	"github.com/qianjisantech/gosmo/recorder/utils"
 
 	"github.com/v2pro/plz/countlog"
 )

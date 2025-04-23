@@ -14,12 +14,12 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/conf"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/ignore"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/model/nuwaplt"
-	"github.com/didi/sharingan/replayer-agent/model/protocol"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/conf"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/ignore"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/nuwaplt"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/protocol"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 )
 
 var (

@@ -10,11 +10,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/conf"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/logic/worker"
-	"github.com/didi/sharingan/replayer-agent/router"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/conf"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/worker"
+	"github.com/qianjisantech/gosmo/replayer-agent/router"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 )
 
 var srv *http.Server

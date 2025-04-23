@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/didi/sharingan/replayer-agent/model/protocol"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/protocol"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 )
 
 type CommonItem struct {

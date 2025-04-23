@@ -1,4 +1,4 @@
-module github.com/didi/sharingan/recorder-agent
+module github.com/qianjisantech/gosmo/recorder-agent
 
 go 1.13
 

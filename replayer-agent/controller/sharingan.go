@@ -16,21 +16,21 @@ import (
 	"sync"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/common/global"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/conf"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/httpclient"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/module"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/outbound"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/template"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/idl"
-	"github.com/didi/sharingan/replayer-agent/logic/bind"
-	"github.com/didi/sharingan/replayer-agent/logic/replayed"
-	"github.com/didi/sharingan/replayer-agent/logic/search"
-	"github.com/didi/sharingan/replayer-agent/logic/worker"
-	"github.com/didi/sharingan/replayer-agent/model/esmodel"
-	"github.com/didi/sharingan/replayer-agent/model/nuwaplt"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/global"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/conf"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/httpclient"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/module"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/outbound"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/template"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/idl"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/bind"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/replayed"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/search"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/worker"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/esmodel"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/nuwaplt"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/julienschmidt/httprouter"
@@ -344,7 +344,7 @@ type modules struct {
 	Names []nuwaplt.Name `json:"names"`
 }
 
-//PlatformModules nuwa平台接口 读取所有模块数据
+// PlatformModules nuwa平台接口 读取所有模块数据
 func (srg ShaRinGan) PlatformModules(w http.ResponseWriter, r *http.Request) {
 	conf.FreshHandler()
 	res := modules{}
@@ -363,7 +363,7 @@ type dslData struct {
 	AddTime string `json:"addTime"`
 }
 
-//PlatformGetDsl nuwa平台接口 查询模块dsl上报数据
+// PlatformGetDsl nuwa平台接口 查询模块dsl上报数据
 func (srg ShaRinGan) PlatformGetDsl(w http.ResponseWriter, r *http.Request) {
 	conf.FreshHandler()
 	resDefault := make([]dslData, 0)
@@ -418,7 +418,7 @@ func (srg ShaRinGan) PlatformGetDsl(w http.ResponseWriter, r *http.Request) {
 	srg.EchoJSON(w, r, res)
 }
 
-//PlatformPostDsl nuwa平台接口 上报模块dsl数据
+// PlatformPostDsl nuwa平台接口 上报模块dsl数据
 func (srg ShaRinGan) PlatformPostDsl(w http.ResponseWriter, r *http.Request) {
 	conf.FreshHandler()
 	resErr := map[string]interface{}{"errno": 1, "errmsg": ""}

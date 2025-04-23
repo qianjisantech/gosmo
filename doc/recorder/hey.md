@@ -60,7 +60,7 @@ import (
         "runtime"
         _ "net/http/pprof"
 
-        _ "github.com/didi/sharingan"
+        _ "github.com/qianjisantech/gosmo"
 )
 
 func main() {

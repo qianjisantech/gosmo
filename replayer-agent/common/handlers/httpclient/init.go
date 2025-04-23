@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
 )
 
 type HttpClient struct {
@@ -19,7 +19,7 @@ func Init() {
 	Handler = HttpClient{}
 }
 
-//Get http get
+// Get http get
 func (hc *HttpClient) Get(ctx context.Context, url string) (*http.Response, []byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -41,7 +41,7 @@ func (hc *HttpClient) Get(ctx context.Context, url string) (*http.Response, []by
 	return resp, body, nil
 }
 
-//Post http post
+// Post http post
 func (hc *HttpClient) Post(ctx context.Context, url string, jsonBytes []byte, timeout time.Duration, headers map[string]string) (*http.Response, []byte, error) {
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBytes))
 	if err != nil {

@@ -5,8 +5,8 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 	"go.uber.org/zap/zapcore"
 )
 

@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/idl"
-	"github.com/didi/sharingan/replayer-agent/model/nuwaplt"
+	"github.com/qianjisantech/gosmo/replayer-agent/idl"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/nuwaplt"
 )
 
 type DSL struct {

@@ -4,7 +4,7 @@ import (
 	"net"
 	"syscall"
 
-	"github.com/didi/sharingan/recorder/koala_grpc/sut"
+	"github.com/qianjisantech/gosmo/recorder/koala_grpc/sut"
 
 	"github.com/v2pro/plz/countlog"
 )

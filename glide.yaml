@@ -1,4 +1,4 @@
-package: github.com/didi/sharingan
+package: github.com/qianjisantech/gosmo
 import:
 - package: github.com/agiledragon/gomonkey
   version: ^2.0.1

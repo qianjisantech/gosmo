@@ -37,18 +37,18 @@
 ##### 快速安装(推荐)
 ```shell script
 # mac
-wget https://github.com/didi/sharingan/releases/download/replayer-agent%2Fv1.3.0/replayer-agent.mac
+wget https://github.com/qianjisantech/gosmo/releases/download/replayer-agent%2Fv1.3.0/replayer-agent.mac
 # linux
-wget https://github.com/didi/sharingan/releases/download/replayer-agent%2Fv1.3.0/replayer-agent.linux
+wget https://github.com/qianjisantech/gosmo/releases/download/replayer-agent%2Fv1.3.0/replayer-agent.linux
 ```
-最新版本请查看 [releases](https://github.com/didi/sharingan/releases) 
+最新版本请查看 [releases](https://github.com/qianjisantech/gosmo/releases) 
 
-将上步wget的bin文件与 [replayer-agent/conf](https://github.com/didi/sharingan/releases/download/replayer-agent%2Fv1.3.0/conf.tar) 和 [replayer-agent/template](https://github.com/didi/sharingan/releases/download/replayer-agent%2Fv1.3.0/template.tar) 放到一个目录下，启动bin文件即可。
+将上步wget的bin文件与 [replayer-agent/conf](https://github.com/qianjisantech/gosmo/releases/download/replayer-agent%2Fv1.3.0/conf.tar) 和 [replayer-agent/template](https://github.com/qianjisantech/gosmo/releases/download/replayer-agent%2Fv1.3.0/template.tar) 放到一个目录下，启动bin文件即可。
 
 ##### 编译安装
 首先，确保本地存在go环境(官方或定制版均可，且版本无要求), 并根据本地go版本选择go mod或glide来安装sharingan的依赖。
 ```shell script
-git clone https://github.com/didi/sharingan.git
+git clone https://github.com/qianjisantech/gosmo.git
 && cd sharingan && go mod download # 低版本go执行 glide install 
 ```
 然后编译并启动Replayer-Agent：
@@ -67,7 +67,7 @@ cd ./replayer-agent && go build && nohup ./replayer-agent >> run.log 2>&1 &
 
 > 需要使用定制的golang，并通过指定tag来编译 引入回放包的SUT代码。
 
-首先，配置定制版golang环境，目前支持go1.10 ~ go1.15，参考：[golang安装](https://github.com/didi/sharingan-go/tree/recorder)
+首先，配置定制版golang环境，目前支持go1.10 ~ go1.15，参考：[golang安装](https://github.com/qianjisantech/gosmo-go/tree/recorder)
 ```shell script
 curl https://raw.githubusercontent.com/didi/sharingan-go/recorder/install/go1.13 | sh
 && export GOROOT=/tmp/recorder-go1.13
@@ -76,7 +76,7 @@ curl https://raw.githubusercontent.com/didi/sharingan-go/recorder/install/go1.13
 
 然后，修改SUT的main.go代码，引入sharingan包。参考：[example](../../example/replayer/main.go)
 ```go
-import _ "github.com/didi/sharingan"
+import _ "github.com/qianjisantech/gosmo"
 ```
 
 最后，编译并启动SUT服务。

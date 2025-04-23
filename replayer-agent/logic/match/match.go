@@ -7,15 +7,15 @@ import (
 	"regexp"
 	"sync"
 
-	"github.com/didi/sharingan/replayer-agent/common/global"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/logic/replayed"
-	"github.com/didi/sharingan/replayer-agent/model/protocol"
-	"github.com/didi/sharingan/replayer-agent/model/recording"
-	"github.com/didi/sharingan/replayer-agent/model/replaying"
-	"github.com/didi/sharingan/replayer-agent/utils/fastcgi"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
-	"github.com/didi/sharingan/replayer-agent/utils/protocol/pthrift"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/global"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/replayed"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/protocol"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/recording"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/replaying"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/fastcgi"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/protocol/pthrift"
 )
 
 var expect100 = []byte("Expect: 100-continue")

@@ -5,7 +5,7 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
 )
 
 var http100req = []byte("Expect: 100-continue")

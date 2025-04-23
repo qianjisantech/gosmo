@@ -1,7 +1,7 @@
 package replayer
 
 import (
-	"github.com/didi/sharingan/replayer/internal"
+	"github.com/qianjisantech/gosmo/replayer/internal"
 )
 
 // GetCurrentGoRoutineID get current goRoutineID incase with delegatedID

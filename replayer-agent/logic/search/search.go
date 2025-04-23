@@ -6,30 +6,30 @@ import (
 	"strings"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/conf"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/httpclient"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/idl"
-	"github.com/didi/sharingan/replayer-agent/model/esmodel"
-	"github.com/didi/sharingan/replayer-agent/model/nuwaplt"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/conf"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/httpclient"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/idl"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/esmodel"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/nuwaplt"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
 type SearchRecords []*SearchRecord
 
-//Len()
+// Len()
 func (s SearchRecords) Len() int {
 	return len(s)
 }
 
-//Less():成绩将有低到高排序
+// Less():成绩将有低到高排序
 func (s SearchRecords) Less(i, j int) bool {
 	return s[i].Timestamp > s[j].Timestamp
 }
 
-//Swap()
+// Swap()
 func (s SearchRecords) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
@@ -113,7 +113,7 @@ func GetTrafficFromLocal(ctx context.Context, req *idl.SearchReq) (int, []string
 	return 0, contents
 }
 
-//AppendFlowList 筛选流量并格式化，并追加到flowList数组
+// AppendFlowList 筛选流量并格式化，并追加到flowList数组
 func AppendFlowList(flowList []*SearchRecord, req *idl.SearchReq, session esmodel.Session) []*SearchRecord {
 	if valide, data := filterTraffic(req, session); valide {
 		if queryForID(req.Field) {
@@ -125,7 +125,7 @@ func AppendFlowList(flowList []*SearchRecord, req *idl.SearchReq, session esmode
 	return flowList
 }
 
-//filterTraffic 过滤配置文件conf/traffic/{project}下的流量
+// filterTraffic 过滤配置文件conf/traffic/{project}下的流量
 func filterTraffic(req *idl.SearchReq, session esmodel.Session) (bool, *SearchRecord) {
 	traffic := handleOneSessionRaw(context.TODO(), session, req.Project)
 	if traffic == nil {

@@ -1,3 +1,4 @@
+//go:build recorder_grpc
 // +build recorder_grpc
 
 package sharingan
@@ -8,10 +9,10 @@ import (
 	"os"
 	"runtime"
 
-	recorderPKG "github.com/didi/sharingan/recorder"
-	"github.com/didi/sharingan/recorder/koala_grpc/hook"
-	"github.com/didi/sharingan/recorder/koala_grpc/logger"
-	"github.com/didi/sharingan/recorder/koala_grpc/recording"
+	recorderPKG "github.com/qianjisantech/gosmo/recorder"
+	"github.com/qianjisantech/gosmo/recorder/koala_grpc/hook"
+	"github.com/qianjisantech/gosmo/recorder/koala_grpc/logger"
+	"github.com/qianjisantech/gosmo/recorder/koala_grpc/recording"
 )
 
 // GetCurrentGoRoutineID GetCurrentGoRoutineID

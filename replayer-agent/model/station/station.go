@@ -5,8 +5,8 @@ package station
 import (
 	"sync"
 
-	"github.com/didi/sharingan/replayer-agent/logic/replayed"
-	"github.com/didi/sharingan/replayer-agent/model/replaying"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/replayed"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/replaying"
 )
 
 type meta struct {

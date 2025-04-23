@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	_ "github.com/didi/sharingan"
+	_ "github.com/qianjisantech/gosmo"
 	// TODO：最后import其他业务包！
 )
 

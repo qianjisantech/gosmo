@@ -33,9 +33,9 @@ local_ip="127.0.0.1"
 local_port="8998"
 
 # set github about go
-git_replayer_agent='https://github.com/didi/sharingan/raw/master/replayer-agent'
+git_replayer_agent='https://github.com/qianjisantech/gosmo/raw/master/replayer-agent'
 git_go='https://raw.githubusercontent.com/didi/sharingan-go/recorder'
-install_go_md='https://github.com/didi/sharingan-go/tree/recorder'
+install_go_md='https://github.com/qianjisantech/gosmo-go/tree/recorder'
 VERSION="go1.13"
 
 function install_go() {
@@ -70,7 +70,7 @@ function install_go() {
 # install go
 function install_go_tar() {
         # get go url
-        releases_go='https://github.com/didi/sharingan-go/releases/download/'
+        releases_go='https://github.com/qianjisantech/gosmo-go/releases/download/'
         if [[ "$OSTYPE" =~ ^darwin.* ]]; then
             goSuffix="$VERSION.recorder/$VERSION.darwin-amd64.tar.gz"
         elif [[ "$OSTYPE" =~ ^linux.* ]]; then
@@ -138,9 +138,9 @@ function build() {
     fi
 
     cd $root
-    go get 'github.com/didi/sharingan'
+    go get 'github.com/qianjisantech/gosmo'
     if [ $? -ne 0 ]; then
-        printf "${error_msg}build failed at executing go get github.com/didi/sharingan, please check!!!\n"
+        printf "${error_msg}build failed at executing go get github.com/qianjisantech/gosmo, please check!!!\n"
         exit 1
     fi
     go clean -modcache
@@ -194,7 +194,7 @@ function build() {
         binName=$appcov
     fi
 
-    pkgReplay='_ "github.com/didi/sharingan"'
+    pkgReplay='_ "github.com/qianjisantech/gosmo"'
     find ./ -name "*\.go" -maxdepth 1 | xargs -n 1 grep  $pkgReplay &> /dev/null
     if [ $? -eq 0 ];then
         printf "${error_msg} build failed for not importing package sharingan/replayer, please import it!!!\n"

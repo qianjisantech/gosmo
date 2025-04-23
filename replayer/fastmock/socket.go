@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/didi/sharingan/replayer/internal"
+	"github.com/qianjisantech/gosmo/replayer/internal"
 )
 
 /* global socket manager */

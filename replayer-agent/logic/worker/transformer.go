@@ -7,15 +7,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/model/esmodel"
-	"github.com/didi/sharingan/replayer-agent/model/recording"
-	"github.com/didi/sharingan/replayer-agent/model/replaying"
-	"github.com/didi/sharingan/replayer-agent/utils/fastcgi"
-	"github.com/didi/sharingan/replayer-agent/utils/helper"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/esmodel"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/recording"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/replaying"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/fastcgi"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/helper"
 )
 
-//TODO: 处理redis数据存map
+// TODO: 处理redis数据存map
 type Transformer struct {
 	//apcuKeyIdx map[string]int // to filter redundant req of redis get
 }
@@ -141,7 +141,7 @@ type MockData struct {
 	Toggle Toggle `json:"toggle"`
 }
 
-//TODO:对外是否删掉
+// TODO:对外是否删掉
 func (t *Transformer) buildMockFiles(actions []esmodel.Action, project string) map[string][][]byte {
 	m := make(map[string][][]byte)
 	for _, action := range actions {

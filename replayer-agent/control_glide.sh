@@ -57,7 +57,7 @@ function install_go() {
 # install go
 function install_go_tar() {
         # get go url
-        releases_go='https://github.com/didi/sharingan-go/releases/download/'
+        releases_go='https://github.com/qianjisantech/gosmo-go/releases/download/'
         if [[ "$OSTYPE" =~ ^darwin.* ]]; then
             goSuffix="$VERSION.recorder/$VERSION.darwin-amd64.tar.gz"
         elif [[ "$OSTYPE" =~ ^linux.* ]]; then
@@ -123,7 +123,7 @@ function build() {
     fi
 
     if [ -z $GOPATH  ];then
-        prePath="/src/github.com/didi/sharingan"
+        prePath="/src/github.com/qianjisantech/gosmo"
         if [[ $workspace == *$prePath* ]];then
             export GOPATH=`echo ${workspace%/src/*}`
             if [ $? -ne 0 ]; then

@@ -8,7 +8,7 @@
 
 ### 1、使用定制版golang【必须】
 
-* 目前支持go1.10 ~ go1.15，参考：[golang安装](https://github.com/didi/sharingan-go/tree/recorder)
+* 目前支持go1.10 ~ go1.15，参考：[golang安装](https://github.com/qianjisantech/gosmo-go/tree/recorder)
 
 ```shell
 # go1.13使用示例，github域名不太稳定，失败可以换成其它方式，参考golang安装
@@ -24,20 +24,20 @@ export PATH=$GOROOT/bin:$PATH
 * 引入包要在业务包之前，保证流量到来之前已经初始化
 
 ```go
-import _ "github.com/didi/sharingan"
+import _ "github.com/qianjisantech/gosmo"
 ```
 
-* 参考：[example](https://github.com/didi/sharingan/blob/master/example/main.go)
+* 参考：[example](https://github.com/qianjisantech/gosmo/blob/master/example/main.go)
 
 #### 2.2、特殊设置【非必须】
 
-* 背景：使用goroutine对外网络调用时，需要显示的传递goroutineID，否则链路无法串联起来，详见：[链路追踪](https://github.com/didi/sharingan/wiki/%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA)
+* 背景：使用goroutine对外网络调用时，需要显示的传递goroutineID，否则链路无法串联起来，详见：[链路追踪](https://github.com/qianjisantech/gosmo/wiki/%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA)
 * tip1：定时任务的流量不会录制，涉及到的代码不需要修改。「我们只录制对外http接口整个流程的流量」
 * tip2：http请求主流程不等待结果的异步网络调用，不需要设置。「我们只录制http请求阶段确定的流量」
 * tip3：常见的第三方包「http、redis、mysql、thrift等」，经测试都可以正常进行录制，不需要修改。
 
 ```go
-import "github.com/didi/sharingan"
+import "github.com/qianjisantech/gosmo"
   
 // 修改之前的代码
 -   go remoteRead()
@@ -50,7 +50,7 @@ import "github.com/didi/sharingan"
 +   }(sharingan.GetCurrentGoRoutineID())
 ```
 
-* 参考：[example](https://github.com/didi/sharingan/blob/master/example/recorder/main.go)
+* 参考：[example](https://github.com/qianjisantech/gosmo/blob/master/example/recorder/main.go)
 
 ### 3、指定tag编译【必须】
 
@@ -70,7 +70,7 @@ cd /path/to/your/project && ./$project    // 使用上一步编译生成二进�
 ```
 
 * 录制成功标志：指定文件/tmp/recorder.log存在流量，一条流量占一行。
-* 线下流量回放，参考：[本地回放](https://github.com/didi/sharingan/blob/master/doc/replayer/replayer-local.md)。
+* 线下流量回放，参考：[本地回放](https://github.com/qianjisantech/gosmo/blob/master/doc/replayer/replayer-local.md)。
 
 #### 4.2、线上流量录制「流量发送给recorder-agent」
 
@@ -80,9 +80,9 @@ export RECORDER_TO_AGENT="http://127.0.0.1:9003" // 指定agent地址，确保re
 cd /path/to/your/project && ./$project           // 使用上一步编译生成二进制文件启动项目
 ```
 
-* 启动recorder-agent：[recorder-agent](https://github.com/didi/sharingan/blob/master/doc/recorder/recorder-agent.md)
+* 启动recorder-agent：[recorder-agent](https://github.com/qianjisantech/gosmo/blob/master/doc/recorder/recorder-agent.md)
 * 录制成功标志：/path/to/your/sharingan/recorder-agent/log/recorder.log存在流量，一条流量占一行。
-* 线上流量回放，参考：[流量回放](https://github.com/didi/sharingan/tree/master/doc/replayer)。
+* 线上流量回放，参考：[流量回放](https://github.com/qianjisantech/gosmo/tree/master/doc/replayer)。
 
 ### 5、grpc server录制
 
@@ -179,13 +179,13 @@ fi
 
 ## 三、录制原理
 
-[录制原理详解](https://github.com/didi/sharingan/wiki/%E6%B5%81%E9%87%8F%E5%BD%95%E5%88%B6%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86)
+[录制原理详解](https://github.com/qianjisantech/gosmo/wiki/%E6%B5%81%E9%87%8F%E5%BD%95%E5%88%B6%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86)
 
 ## 四、常见问题
 
 ### 1、对正常服务影响
 
-* [压测详情](https://github.com/didi/sharingan/blob/master/doc/recorder/hey.md)
+* [压测详情](https://github.com/qianjisantech/gosmo/blob/master/doc/recorder/hey.md)
 * 建议只在一台机器上开启录制，其它机器不受任何影响。【降低影响面，参考最佳实现】
 * 建议添加pprof监控，观察服务健康状况，逐步调高录制机器权重。【有问题可以下线机器，或者在机器上用正常bin重启】
 

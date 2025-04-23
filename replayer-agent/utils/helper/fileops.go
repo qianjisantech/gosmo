@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/conf"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/conf"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
 )
 
 func WriteFile(fpath string, content []byte) error {
@@ -80,7 +80,7 @@ func TempFileWithSuffix(dir, prefix, suffix string) (f *os.File, err error) {
 	return
 }
 
-//ReadLines 逐行读取并返回文件内容
+// ReadLines 逐行读取并返回文件内容
 func ReadLines(confFile string) ([]string, error) {
 	file, err := os.Open(confFile)
 	if err != nil {
@@ -106,14 +106,14 @@ func ReadLines(confFile string) ([]string, error) {
 	return contents, scanner.Err()
 }
 
-//ReadFile 读取并返回整个文件内容
+// ReadFile 读取并返回整个文件内容
 func ReadFileBytes(confFile string) ([]byte, error) {
 	conetent, err := ioutil.ReadFile(confFile)
 
 	return conetent, err
 }
 
-//WriteFileString 写入并覆盖配置文件
+// WriteFileString 写入并覆盖配置文件
 func WriteFileString(confFile, data string) error {
 	fd, err := os.OpenFile(confFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
 	defer fd.Close()

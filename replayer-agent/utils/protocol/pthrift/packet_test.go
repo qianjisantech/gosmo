@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/didi/sharingan/replayer-agent/utils/protocol/helper"
 	"github.com/modern-go/parse"
 	"github.com/modern-go/parse/model"
+	"github.com/qianjisantech/gosmo/replayer-agent/utils/protocol/helper"
 	"github.com/stretchr/testify/require"
 )
 

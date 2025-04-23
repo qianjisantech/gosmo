@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/logic/outbound"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/outbound"
 	"go.uber.org/zap"
 )
 

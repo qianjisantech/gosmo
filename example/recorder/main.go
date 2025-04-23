@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/didi/sharingan"
+	"github.com/qianjisantech/gosmo"
 )
 
 func main() {

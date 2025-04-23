@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/didi/sharingan/recorder-agent/common/conf"
-	"github.com/didi/sharingan/recorder-agent/common/zap"
-	"github.com/didi/sharingan/recorder-agent/record"
-	"github.com/didi/sharingan/recorder-agent/server"
+	"github.com/qianjisantech/gosmo/recorder-agent/common/conf"
+	"github.com/qianjisantech/gosmo/recorder-agent/common/zap"
+	"github.com/qianjisantech/gosmo/recorder-agent/record"
+	"github.com/qianjisantech/gosmo/recorder-agent/server"
 )
 
 var (

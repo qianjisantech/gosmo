@@ -3,7 +3,7 @@ package conf
 import (
 	"fmt"
 
-	"github.com/didi/sharingan/recorder-agent/common/path"
+	"github.com/qianjisantech/gosmo/recorder-agent/common/path"
 
 	"github.com/spf13/viper"
 )

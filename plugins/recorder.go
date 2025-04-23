@@ -3,7 +3,7 @@ package plugins
 import (
 	"context"
 
-	"github.com/didi/sharingan/recorder/koala/recording"
+	"github.com/qianjisantech/gosmo/recorder/koala/recording"
 )
 
 var recorders []recording.Recorder

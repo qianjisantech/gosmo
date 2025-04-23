@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/didi/sharingan/recorder/koala_grpc/recording"
-	"github.com/didi/sharingan/recorder/utils"
+	"github.com/qianjisantech/gosmo/recorder/koala_grpc/recording"
+	"github.com/qianjisantech/gosmo/recorder/utils"
 
 	"github.com/v2pro/plz/countlog"
 )

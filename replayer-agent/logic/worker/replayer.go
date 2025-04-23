@@ -13,13 +13,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/didi/sharingan/replayer-agent/common/global"
-	"github.com/didi/sharingan/replayer-agent/common/handlers/tlog"
-	"github.com/didi/sharingan/replayer-agent/logic/outbound"
-	"github.com/didi/sharingan/replayer-agent/logic/replayed"
-	"github.com/didi/sharingan/replayer-agent/model/nuwaplt"
-	"github.com/didi/sharingan/replayer-agent/model/replaying"
-	"github.com/didi/sharingan/replayer-agent/model/station"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/global"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/tlog"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/outbound"
+	"github.com/qianjisantech/gosmo/replayer-agent/logic/replayed"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/nuwaplt"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/replaying"
+	"github.com/qianjisantech/gosmo/replayer-agent/model/station"
 )
 
 var hooks []func()
@@ -117,7 +117,7 @@ func (r *Replayer) ReplaySessionDoreplay(ctx context.Context, session *replaying
 	return 0, nil
 }
 
-//GenTraceID 生成traceID
+// GenTraceID 生成traceID
 func GenTraceID() string {
 	ip := "127.0.0.1"
 

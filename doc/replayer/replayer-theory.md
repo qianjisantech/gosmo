@@ -17,7 +17,7 @@ Golang的流量回放 主要基于 [sharingan/replayer](../../replayer) 包 及 
  2. 如何在录制的流量里，选择最合适的Outbound返回给SUT。
 
 ## 二、Outbound请求拦截点
-看过 [流量录制拦截点选择](https://github.com/didi/sharingan/wiki/%E6%8B%A6%E6%88%AA%E7%82%B9%E9%80%89%E6%8B%A9) 可知，golang的录制是在语言标准库层面做的拦截。
+看过 [流量录制拦截点选择](https://github.com/qianjisantech/gosmo/wiki/%E6%8B%A6%E6%88%AA%E7%82%B9%E9%80%89%E6%8B%A9) 可知，golang的录制是在语言标准库层面做的拦截。
 
 同理，流量回放也是在语言标准库层面做的拦截。修改系统调用 [syscall.Connect](https://github.com/golang/go/blob/release-branch.go1.10/src/syscall/syscall_unix.go#L225) 方法，将原本的socket地址sa替换为Mock Server地址。
 ```shell script
@@ -134,7 +134,7 @@ func (c *conn) Write(b []byte) (int, error) {
 
 SUT每接收Web Server的一个http请求，都会开启一个goroutine，同时，一般都会在这同一个goroutine内完成下游请求的调用，最终将http响应返回给Web Server。所以，针对这种情况，在同一个goroutine内维护sessionID是很简单的事。
 
-但 对于通过新起一个goroutine来调用下游请求的SUT，维护sessionID需要基于录制里讲到的 [链路追踪](https://github.com/didi/sharingan/wiki/%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA) 原理，基于定制版的golang实现。
+但 对于通过新起一个goroutine来调用下游请求的SUT，维护sessionID需要基于录制里讲到的 [链路追踪](https://github.com/qianjisantech/gosmo/wiki/%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA) 原理，基于定制版的golang实现。
 
 ```shell script
 // GetCurrentGoRoutineId get RoutineId in case delegate

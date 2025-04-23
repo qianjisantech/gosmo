@@ -10,8 +10,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/didi/sharingan/replayer/internal"
-	"github.com/didi/sharingan/replayer/monkey"
+	"github.com/qianjisantech/gosmo/replayer/internal"
+	"github.com/qianjisantech/gosmo/replayer/monkey"
 )
 
 const (

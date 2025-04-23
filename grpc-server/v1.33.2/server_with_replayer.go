@@ -1,3 +1,4 @@
+//go:build replayer
 // +build replayer
 
 package grpc
@@ -10,7 +11,7 @@ import (
 	"google.golang.org/grpc/internal/transport"
 	"google.golang.org/grpc/metadata"
 
-    "github.com/didi/sharingan/replayer/fastmock"
+	"github.com/qianjisantech/gosmo/replayer/fastmock"
 )
 
 func handleReplayerHeader(stream *transport.Stream) {

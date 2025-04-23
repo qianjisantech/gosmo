@@ -1,3 +1,4 @@
+//go:build recorder
 // +build recorder
 
 package sharingan
@@ -6,11 +7,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/didi/sharingan/plugins"
-	"github.com/didi/sharingan/recorder"
-	"github.com/didi/sharingan/recorder/koala/hook"
-	"github.com/didi/sharingan/recorder/koala/logger"
-	"github.com/didi/sharingan/recorder/koala/sut"
+	"github.com/qianjisantech/gosmo/plugins"
+	"github.com/qianjisantech/gosmo/recorder"
+	"github.com/qianjisantech/gosmo/recorder/koala/hook"
+	"github.com/qianjisantech/gosmo/recorder/koala/logger"
+	"github.com/qianjisantech/gosmo/recorder/koala/sut"
 )
 
 // GetCurrentGoRoutineID get current goroutineID incase SetDelegatedFromGoRoutineID

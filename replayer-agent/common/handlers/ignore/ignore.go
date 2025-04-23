@@ -1,7 +1,7 @@
 package ignore
 
 import (
-	"github.com/didi/sharingan/replayer-agent/common/handlers/conf"
+	"github.com/qianjisantech/gosmo/replayer-agent/common/handlers/conf"
 )
 
 const (

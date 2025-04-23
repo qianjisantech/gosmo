@@ -1,3 +1,4 @@
+//go:build replayer
 // +build replayer
 
 package sharingan
@@ -5,8 +6,8 @@ package sharingan
 import (
 	"log"
 
-	"github.com/didi/sharingan/replayer"
-	"github.com/didi/sharingan/replayer/fastmock"
+	"github.com/qianjisantech/gosmo/replayer"
+	"github.com/qianjisantech/gosmo/replayer/fastmock"
 )
 
 // GetCurrentGoRoutineID get current goroutineID incase SetDelegatedFromGoRoutineID
