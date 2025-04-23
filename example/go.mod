@@ -2,7 +2,7 @@ module github.com/qianjisantech/gosmo/example
 
 go 1.21
 
-require github.com/qianjisantech/gosmo v1.0.1
+require github.com/qianjisantech/gosmo v0.0.1
 
 require (
 	github.com/agiledragon/gomonkey v2.0.1+incompatible // indirect
