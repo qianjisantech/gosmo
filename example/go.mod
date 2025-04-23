@@ -1,6 +1,6 @@
 module example
 
-go 1.22
+go 1.21
 
 require github.com/didi/sharingan v1.0.1
 
