@@ -21,7 +21,7 @@ func StartDetached(cmd string, args []string) error {
 			nil,
 			nil,
 		},
-		Sys: &syscall.SysProcAttr{HideWindow: false, NoInheritHandles: false},
+		Sys: &syscall.SysProcAttr{Foreground: false},
 	}
 	process, err := os.StartProcess(cmd, args, &attr)
 	if err != nil {
