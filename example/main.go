@@ -6,8 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-
-	_ "github.com/qianjisantech/gosmo"
 	// TODO：最后import其他业务包！
 )
 

@@ -1,7 +1,7 @@
 //go:build recorder
 // +build recorder
 
-package sharingan
+package gosmo
 
 import (
 	"log"

@@ -1,8 +1,7 @@
-// +build !recorder
-// +build !recorder_grpc
-// +build !replayer
+//go:build !recorder && !recorder_grpc && !replayer
+// +build !recorder,!recorder_grpc,!replayer
 
-package sharingan
+package gosmo
 
 // GetCurrentGoRoutineID get current goroutineID incase SetDelegatedFromGoRoutineID
 func GetCurrentGoRoutineID() int64 {

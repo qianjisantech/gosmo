@@ -1,7 +1,7 @@
 //go:build replayer
 // +build replayer
 
-package sharingan
+package gosmo
 
 import (
 	"log"

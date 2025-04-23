@@ -1,7 +1,7 @@
 //go:build recorder_grpc
 // +build recorder_grpc
 
-package sharingan
+package gosmo
 
 import (
 	"context"
