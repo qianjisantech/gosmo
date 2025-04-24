@@ -1,0 +1,32 @@
+syntax = "v1"
+
+info (
+	title:   "gosmo后端"
+	desc:    "qianji"
+	author:  "qianji"
+	email:   "2497822530@qq.com"
+	version: "0.1"
+)
+type (
+KafkaSyncProducerRequest {
+
+}
+KafkaSyncProducerResp {
+  Success bool `json:"success"`
+  Message string  `json:"message"`
+  Data interface{} `json:"data"`
+}
+)
+
+@server(
+	group: gsomo
+	prefix: /gsomo
+)
+
+service gosmo-api {
+
+
+	@handler KafkaSyncProducer
+	post /kafka/producer/sync (KafkaSyncProducerRequest)  returns (KafkaSyncProducerResp)
+}
+

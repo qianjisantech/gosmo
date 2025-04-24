@@ -1,2 +1,0 @@
-GOOS=linux GOARCH=amd64 go build -o ./replayer-agent.linux main.go
-GOOS=darwin GOARCH=amd64 go build -o ./replayer-agent.mac main.go

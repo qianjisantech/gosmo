@@ -1,0 +1,10 @@
+import "record/kafka.api"
+
+info (
+	title:   "gosmo 服务"
+	desc:    "gosmo 服务"
+	author:  "qianji"
+	email:   "2497822530@qq.com"
+	version: "0.1"
+)
+
