@@ -21,11 +21,11 @@ export default defineConfig(({ command, mode }) => {
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
         },
-        '/gosmo/': {
-          target: 'http://47.94.96.190:8001',
-          changeOrigin: true,
-          // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
-        }
+        // '/gosmo/': {
+        //   target: 'http://47.94.96.190:8001',
+        //   changeOrigin: true,
+        //   // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
+        // }
       }
     },
     resolve: {
