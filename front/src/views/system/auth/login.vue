@@ -100,8 +100,8 @@ const footerStyle: CSSProperties = {
 
 
 const loginForm = reactive<loginFormType>({
-  username: "",
-  password: "",
+  username: "admin",
+  password: "123456",
   // captcha: "",
   // captcha_key: "",
   // remember: true
