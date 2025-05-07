@@ -13,7 +13,7 @@ export function login (body) {
 
 export function getNewToken (body) {
   return request({
-    url: '/api/system/auth/token/refresh',
+    url: '/sys/auth/token/refresh',
     method: 'post',
     data: body
   })
@@ -21,7 +21,7 @@ export function getNewToken (body) {
 
 export function getCaptcha () {
   return request({
-    url: '/api/system/auth/captcha/get',
+    url: '/sys/auth/captcha/get',
     method: 'post',
   })
 }

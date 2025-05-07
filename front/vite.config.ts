@@ -1,16 +1,14 @@
-import { defineConfig, loadEnv, UserConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 
-// 如果你需要使用 console.log 调试 resolve 或其他工具
-console.log(resolve)
-
-// https://vitejs.dev/config/
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
 
-  // 返回 Vite 配置对象
-  const config: UserConfig = {
+  // ✅ 生产环境直接使用真实 API，开发环境走代理
+  const API_BASE_URL = env.VITE_API_BASE_URL || 'https://mock.mengxuegu.com/mock/681b2cb1d5b98b579eb29a0f/gosmo'
+
+  return {
     plugins: [vue()],
     server: {
       host: '0.0.0.0',
@@ -19,7 +17,7 @@ export default defineConfig(({ command, mode }) => {
         '/api/': {
           target: 'https://mock.mengxuegu.com/mock/681b2cb1d5b98b579eb29a0f/gosmo',
           changeOrigin: true,
-          // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
+          // rewrite: (path) => path.replace(/^\/api/, ''),
         }
       }
     },
@@ -27,8 +25,9 @@ export default defineConfig(({ command, mode }) => {
       alias: {
         '@': resolve(__dirname, './src')
       }
+    },
+    define: {
+      'process.env.VITE_API_BASE_URL': JSON.stringify(API_BASE_URL)
     }
   }
-
-  return config
 })

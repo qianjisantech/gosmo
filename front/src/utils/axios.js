@@ -5,7 +5,6 @@ import { getNewToken } from '@/api/sys/auth.js'
 import { save_token } from "./util.js"
 import notification from 'ant-design-vue/es/notification'
 
-const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 // 创建 axios 实例
 const request = axios.create({
