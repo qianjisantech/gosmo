@@ -17,7 +17,7 @@ export default defineConfig(({ command, mode }) => {
       port: 5180,
       proxy: {
         '/api/': {
-          target: 'L https://mock.mengxuegu.com/mock/681b2cb1d5b98b579eb29a0f/gosmo',
+          target: 'https://mock.mengxuegu.com/mock/681b2cb1d5b98b579eb29a0f/gosmo',
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
         },
