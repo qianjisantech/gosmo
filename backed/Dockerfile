@@ -20,7 +20,7 @@ RUN echo "Rebuild required"
 RUN apt-get update && apt-get install -y ca-certificates
 
 # 构建应用程序
-RUN go build -o easypost-backed
+RUN go build -o gosmo-backed
 
 
 # 暴露应用程序的端口
