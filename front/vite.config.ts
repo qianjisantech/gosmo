@@ -17,15 +17,15 @@ export default defineConfig(({ command, mode }) => {
       port: 5180,
       proxy: {
         '/api/': {
-          target: 'https://mock.mengxuegu.com/mock/674e5c6cc2c0134bc13ef895/traffica',
+          target: 'L https://mock.mengxuegu.com/mock/681b2cb1d5b98b579eb29a0f/gosmo',
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
         },
-        // '/gosmo/': {
-        //   target: 'http://47.94.96.190:8001',
-        //   changeOrigin: true,
-        //   // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
-        // }
+        '/gosmo/': {
+          target: 'http://47.94.96.190:8001',
+          changeOrigin: true,
+          // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
+        }
       }
     },
     resolve: {
