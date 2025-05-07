@@ -1,6 +1,7 @@
 package svc
 
 import (
+	_ "github.com/IBM/sarama"
 	"github.com/qianjisantech/gosmo/internal/config"
 )
 
@@ -9,6 +10,7 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+
 	return &ServiceContext{
 		Config: c,
 	}

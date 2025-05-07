@@ -1,4 +1,4 @@
-import "record/kafka.api"
+import "record/traffic.api"
 
 info (
 	title:   "gosmo 服务"

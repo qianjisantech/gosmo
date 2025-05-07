@@ -1,0 +1,28 @@
+syntax = "v1"
+
+info(
+    title: "agent后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+type (
+    AgentRunRequest {
+        ListenPort string   `json:"listenPort"`
+    }
+    AgentRunResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data interface{} `json:"data"`
+    }
+)
+
+@server(
+    group: agent
+    prefix: /api
+)
+service agent-api {
+    @handler AgentRun
+    post /agent/run (AgentRunRequest) returns (AgentRunResp)
+}

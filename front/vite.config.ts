@@ -20,6 +20,11 @@ export default defineConfig(({ command, mode }) => {
           target: 'https://mock.mengxuegu.com/mock/674e5c6cc2c0134bc13ef895/traffica',
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
+        },
+        '/gosmo/': {
+          target: 'http://localhost:8001',
+          changeOrigin: true,
+          // rewrite: (path) => path.replace(/^\/api/, ''), // 可选：如果你需要重写路径
         }
       }
     },

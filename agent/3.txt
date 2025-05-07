@@ -1,0 +1,438 @@
+package agent
+
+import (
+	"agent/internal/common/errorx"
+	"agent/internal/env"
+	"bufio"
+	"bytes"
+	"context"
+	"crypto/md5"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"net/url"
+	"os/exec"
+	"strconv"
+	"strings"
+	"time"
+
+	"agent/internal/svc"
+	"agent/internal/types"
+
+	"github.com/zeromicro/go-zero/core/logx"
+)
+
+type AgentRunLogic struct {
+	logx.Logger
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+}
+
+func NewAgentRunLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AgentRunLogic {
+	return &AgentRunLogic{
+		Logger: logx.WithContext(ctx),
+		ctx:    ctx,
+		svcCtx: svcCtx,
+	}
+}
+
+func (l *AgentRunLogic) AgentRun(req *types.AgentRunRequest) (resp *types.AgentRunResp, err error) {
+	// 1. 确保索引模板存在（同步操作，必须立即检查）
+	if err := l.createIndexTemplate(); err != nil {
+		return nil, errorx.NewDefaultError("无法创建索引模板: %v" + err.Error())
+	}
+	gorPath, err := env.GetGorPath()
+	// 2. 启动 gor 进程
+	cmd := exec.Command(gorPath,
+		"--input-raw", ":8888",
+		"--input-raw-track-response",
+		"-output-http-track-response",
+		"--output-stdout")
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return nil, errorx.NewDefaultError("创建stdout管道失败:" + err.Error())
+	}
+
+	if err := cmd.Start(); err != nil {
+		return nil, errorx.NewDefaultError("启动GoReplay失败:" + err.Error())
+	}
+
+	// 3. 异步处理数据流（不阻塞主线程）
+	go func() {
+		defer cmd.Process.Kill() // 确保进程退出时被清理
+		l.processStream(stdout)
+	}()
+
+	// 4. 立即返回成功
+	return &types.AgentRunResp{
+		Success: true,
+		Message: "GoReplay已启动，正在异步处理流量",
+	}, nil
+}
+
+type Request struct {
+	Method  string            `json:"method"`
+	URL     string            `json:"url"`
+	Headers map[string]string `json:"headers"`
+	Body    string            `json:"body"`
+}
+
+type Response struct {
+	Status  int               `json:"status"`
+	Headers map[string]string `json:"headers"`
+	Body    string            `json:"body"`
+}
+
+type RequestResponse struct {
+	RequestID string            `json:"request_id"`
+	Timestamp time.Time         `json:"@timestamp"`
+	Request   Request           `json:"request"`
+	Response  Response          `json:"response"`
+	Metadata  map[string]string `json:"metadata,omitempty"`
+}
+
+func (l *AgentRunLogic) createIndexTemplate() error {
+	template := `{
+		"index_patterns": ["gosmo-*"],  // 修改为实际使用的索引模式
+		"priority": 100,                // 设置高优先级确保模板生效
+		"template": {
+			"mappings": {
+				"dynamic": false,
+				"properties": {
+					"@timestamp": {"type": "date"},
+					"request_id": {"type": "keyword"},
+					"request": {
+						"properties": {
+							"method": {"type": "keyword"},
+							"url": {
+								"type": "text",
+								"fields": {"keyword": {"type": "keyword"}}
+							},
+							"body": {"type": "text"},
+							"headers": {"type": "object", "enabled": true}  // 使用简单object类型
+						}
+					},
+					"response": {
+						"properties": {
+							"status": {"type": "integer"},
+							"body": {"type": "text"},
+							"headers": {"type": "object", "enabled": true}  // 使用简单object类型
+						}
+					},
+					"metadata": {
+						"properties": {
+							"source": {"type": "keyword"},
+							"host": {"type": "keyword"},
+							"user_agent": {"type": "keyword"},
+							"timestamp": {"type": "date"}
+						}
+					}
+				}
+			},
+			"settings": {
+				"number_of_shards": 1,
+				"number_of_replicas": 0
+			}
+		}
+	}`
+
+	//// 先删除旧模板（可选）
+	//http.DefaultClient.Do(&http.Request{
+	//	Method: "DELETE",
+	//	URL:    l.parseURL("http://47.94.96.190:9200/_index_template/gosmo-template"),
+	//})
+
+	resp, err := http.Post(
+		l.svcCtx.Config.ElasticSearch.Host+"/_index_template/gosmo-template",
+		"application/json",
+		bytes.NewBufferString(template),
+	)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("创建模板失败: %s", string(body))
+	}
+
+	log.Println("索引模板创建/更新成功")
+	return nil
+}
+
+const (
+	phaseStart = iota
+	phaseHeaders
+	phaseBody
+)
+
+func (l *AgentRunLogic) processStream(stdout io.ReadCloser) {
+	scanner := bufio.NewScanner(stdout)
+	scanner.Buffer(make([]byte, 1024*1024), 10*1024*1024)
+
+	var (
+		currentReq   *Request
+		currentResp  *Response
+		isRequest    bool
+		bodyBuffer   bytes.Buffer // 改用 bytes.Buffer 更高效处理 body
+		reqStartTime time.Time
+		parsingPhase = phaseStart // 使用状态机替代布尔标记
+		expectBody   bool
+	)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		switch {
+		case strings.HasPrefix(line, "1 "), strings.HasPrefix(line, "2 "):
+			// 处理之前完成的请求-响应对
+			if currentReq != nil && currentResp != nil {
+				log.Printf("")
+				l.finalizeBody(&bodyBuffer, isRequest, currentReq, currentResp)
+				l.processCompletedPair(currentReq, currentResp, reqStartTime)
+			}
+
+			// 初始化新请求/响应
+			if strings.HasPrefix(line, "1 ") {
+				currentReq = &Request{Headers: make(map[string]string)}
+				isRequest = true
+				reqStartTime = time.Now().UTC()
+			} else {
+				currentResp = &Response{Headers: make(map[string]string)}
+				isRequest = false
+			}
+			bodyBuffer.Reset()
+			parsingPhase = phaseHeaders
+			expectBody = false
+
+			// 解析起始行
+			l.parseStartLine(line, isRequest, currentReq, currentResp)
+
+		case line == "":
+			// 空行表示 headers 结束
+			if parsingPhase == phaseHeaders {
+				parsingPhase = phaseBody
+				expectBody = l.shouldExpectBody(isRequest, currentReq, currentResp)
+			} else {
+				// 空行作为 body 的一部分（如 multipart/form-data）
+				if expectBody {
+					bodyBuffer.WriteString("\n") // 保留原始空行
+				}
+			}
+
+		default:
+			switch parsingPhase {
+			case phaseHeaders:
+				l.parseHeaderLine(line, isRequest, currentReq, currentResp)
+			case phaseBody:
+				if expectBody {
+					if bodyBuffer.Len() > 0 {
+						bodyBuffer.WriteString("\n") // 添加换行符分隔多行
+					}
+					bodyBuffer.WriteString(line)
+				}
+			}
+		}
+	}
+
+	// 处理最后一条记录
+	if currentReq != nil && currentResp != nil {
+		l.finalizeBody(&bodyBuffer, isRequest, currentReq, currentResp)
+		l.processCompletedPair(currentReq, currentResp, reqStartTime)
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Printf("扫描错误: %v", err)
+	}
+}
+
+func (l *AgentRunLogic) parseStartLine(line string, isRequest bool, req *Request, resp *Response) {
+	parts := strings.SplitN(line, " ", 3)
+	if len(parts) < 3 {
+		return
+	}
+
+	if isRequest {
+		// 完整解析请求行: METHOD URI PROTOCOL
+		req.Method = parts[0]
+
+		// 提取完整URL（包括查询参数）
+		if u, err := url.Parse(parts[1]); err == nil {
+			req.URL = u.Path
+			if u.RawQuery != "" {
+				req.URL += "?" + u.RawQuery
+			}
+		} else {
+			req.URL = parts[1] // 回退方案
+		}
+	} else {
+		// 响应行: PROTOCOL STATUS REASON
+		if strings.HasPrefix(parts[0], "HTTP/") {
+			status, _ := strconv.Atoi(parts[1])
+			resp.Status = status
+		}
+	}
+}
+
+// 解析头字段
+func (l *AgentRunLogic) parseHeaderLine(line string, isRequest bool, req *Request, resp *Response) {
+	if idx := strings.Index(line, ":"); idx > 0 {
+		key := strings.TrimSpace(line[:idx])
+		value := strings.TrimSpace(line[idx+1:])
+		if isRequest {
+			req.Headers[key] = value
+		} else {
+			resp.Headers[key] = value
+		}
+	}
+}
+
+// 判断是否需要读取 body
+func (l *AgentRunLogic) shouldExpectBody(isRequest bool, req *Request, resp *Response) bool {
+	headers := req.Headers
+	if !isRequest {
+		headers = resp.Headers
+	}
+
+	// 检查分块传输
+	if te, ok := headers["Transfer-Encoding"]; ok && strings.Contains(strings.ToLower(te), "chunked") {
+		return true
+	}
+
+	// 检查内容长度
+	if cl, ok := headers["Content-Length"]; ok {
+		if length, err := strconv.Atoi(cl); err == nil && length > 0 {
+			return true
+		}
+	}
+
+	// 特殊请求方法可能有 body
+	if isRequest && (req.Method == "POST" || req.Method == "PUT" || req.Method == "PATCH") {
+		return true
+	}
+
+	return false
+}
+
+// 最终处理 body 内容
+func (l *AgentRunLogic) finalizeBody(bodyBuffer *bytes.Buffer, isRequest bool, req *Request, resp *Response) {
+	body := bodyBuffer.String()
+	// 移除可能存在的分隔符（防御性处理）
+	body = strings.Split(body, "🐵🙈🙉")[0]
+	body = strings.TrimSpace(body)
+
+	if isRequest && req != nil {
+		req.Body = body
+	} else if resp != nil {
+		resp.Body = body
+	}
+}
+func (l *AgentRunLogic) processCompletedPair(req *Request, resp *Response, timestamp time.Time) {
+	if req == nil || resp == nil {
+		return
+	}
+
+	// 规范化URL
+	if !strings.HasPrefix(req.URL, "/") && !strings.Contains(req.URL, "://") {
+		req.URL = "/" + req.URL
+	}
+
+	rr := RequestResponse{
+		RequestID: l.generateRequestID(),
+		Timestamp: timestamp,
+		Request:   *req,
+		Response:  *resp,
+		Metadata: map[string]string{
+			"source":     "gor",
+			"host":       l.getHostFromHeaders(req.Headers),
+			"user_agent": req.Headers["User-Agent"],
+			"timestamp":  timestamp.Format(time.RFC3339),
+		},
+	}
+
+	if err := l.sendToElasticsearch(rr); err != nil {
+		logx.Errorf("ES写入失败: %v", err)
+	}
+}
+
+func (l *AgentRunLogic) sendToElasticsearch(rr RequestResponse) error {
+	// 准备文档数据
+	doc := map[string]interface{}{
+		"request_id": rr.RequestID,
+		"@timestamp": rr.Timestamp,
+		"request": map[string]interface{}{
+			"method":  rr.Request.Method,
+			"url":     rr.Request.URL,
+			"headers": rr.Request.Headers, // 直接使用map
+			"body":    rr.Request.Body,
+		},
+		"response": map[string]interface{}{
+			"status":  rr.Response.Status,
+			"headers": rr.Response.Headers, // 直接使用map
+			"body":    rr.Response.Body,
+		},
+		"metadata": rr.Metadata,
+	}
+	log.Printf("传入es之前的数据为：%v", doc)
+	jsonData, err := json.Marshal(doc)
+
+	if err != nil {
+		return fmt.Errorf("JSON编码失败: %v", err)
+	}
+
+	indexName := "gosmo-" + time.Now().Format(time.DateOnly)
+	docID := l.generateDocID(rr.Request.URL)
+	url := fmt.Sprintf("%s/%s/_doc/%s", l.svcCtx.Config.ElasticSearch.Host, indexName, docID)
+
+	req, err := http.NewRequest("PUT", url, bytes.NewReader(jsonData))
+	if err != nil {
+		return fmt.Errorf("创建请求失败: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("请求失败: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("ES返回错误: 状态码=%d, 响应=%s", resp.StatusCode, string(body))
+	}
+
+	log.Printf("生成请求---->ID为 %s, 成功写入ES: %s %s %s -> %d", rr.RequestID,
+		rr.Request.Method, rr.Request.URL, rr.Response.Status)
+	return nil
+}
+
+func (l *AgentRunLogic) generateDocID(reqURL string) string {
+	// 先尝试解析URL获取path部分
+	if u, err := url.Parse(reqURL); err == nil {
+		reqURL = u.Path
+	}
+
+	h := md5.New()
+	io.WriteString(h, reqURL)
+	return fmt.Sprintf("%x", h.Sum(nil))
+}
+
+func (l *AgentRunLogic) generateRequestID() string {
+	return fmt.Sprintf("%d", time.Now().UnixNano())
+}
+
+func (l *AgentRunLogic) getHostFromHeaders(headers map[string]string) string {
+	if host, ok := headers["Host"]; ok {
+		return host
+	}
+	return "unknown"
+}
+
+func (l *AgentRunLogic) parseURL(raw string) *url.URL {
+	u, _ := url.Parse(raw)
+	return u
+}

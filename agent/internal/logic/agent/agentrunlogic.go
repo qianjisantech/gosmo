@@ -1,0 +1,264 @@
+package agent
+
+import (
+	"agent/internal/common/errorx"
+	"agent/internal/env"
+	"agent/internal/svc"
+	"agent/internal/types"
+	"bufio"
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"github.com/elastic/go-elasticsearch/v7/esapi"
+	"github.com/zeromicro/go-zero/core/logx"
+	"io"
+	"os/exec"
+	"strconv"
+	"strings"
+	"time"
+)
+
+type AgentRunLogic struct {
+	logx.Logger
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+}
+
+func NewAgentRunLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AgentRunLogic {
+	return &AgentRunLogic{
+		Logger: logx.WithContext(ctx),
+		ctx:    ctx,
+		svcCtx: svcCtx,
+	}
+}
+
+func (l *AgentRunLogic) AgentRun(req *types.AgentRunRequest) (*types.AgentRunResp, error) {
+	gorPath, err := env.GetGorPath()
+	if err != nil {
+		return nil, errorx.NewDefaultError("获取Gor路径失败: " + err.Error())
+	}
+
+	cmd := exec.Command(gorPath,
+		"--input-raw", ":8888",
+		"--input-raw-track-response",
+		"--output-http-track-response",
+		"--output-stdout",
+		"--prettify-http") // 添加美化选项，便于解析
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return nil, errorx.NewDefaultError("创建stdout管道失败: " + err.Error())
+	}
+
+	if err := cmd.Start(); err != nil {
+		return nil, errorx.NewDefaultError("启动GoReplay失败: " + err.Error())
+	}
+
+	go func() {
+		defer func() {
+			if cmd.Process != nil {
+				_ = cmd.Process.Kill()
+			}
+		}()
+		l.HandleTraffic(stdout) // 处理实时流量
+	}()
+
+	return &types.AgentRunResp{
+		Success: true,
+		Message: "GoReplay已启动，正在异步处理流量",
+	}, nil
+}
+
+// HTTP事务结构体
+type HTTPTransaction struct {
+	Request  *HTTPRequest  `json:"request,omitempty"`
+	Response *HTTPResponse `json:"response,omitempty"`
+}
+
+type HTTPRequest struct {
+	Method  string            `json:"method"`
+	URL     string            `json:"url"`
+	Headers map[string]string `json:"headers"`
+	Body    string            `json:"body,omitempty"`
+}
+
+type HTTPResponse struct {
+	Status  string            `json:"status"`
+	Headers map[string]string `json:"headers"`
+	Body    string            `json:"body,omitempty"`
+}
+
+func (l *AgentRunLogic) HandleTraffic(reader io.Reader) {
+	scanner := bufio.NewScanner(reader)
+	var currentTx *HTTPTransaction
+	var isBody bool // 标记是否开始处理正文
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		// 1. 跳过分隔符和空行
+		if line == "🐵🙈🙉" {
+			if currentTx != nil && currentTx.Request != nil && currentTx.Response != nil {
+				l.ProcessCompleteTransaction(currentTx)
+				currentTx = nil
+				isBody = false
+			}
+			continue
+		}
+
+		// 2. 检测请求行
+		if strings.HasPrefix(line, "POST ") || strings.HasPrefix(line, "GET ") ||
+			strings.HasPrefix(line, "PUT ") || strings.HasPrefix(line, "DELETE ") {
+
+			if currentTx == nil {
+				currentTx = &HTTPTransaction{}
+			}
+			currentTx.Request = l.ParseRequestLine(line)
+			isBody = false // 新请求开始，重置正文标记
+			continue
+		}
+
+		// 3. 检测响应行
+		if strings.HasPrefix(line, "HTTP/1.1 ") {
+			if currentTx == nil {
+				currentTx = &HTTPTransaction{}
+			}
+			currentTx.Response = l.ParseResponseLine(line)
+			isBody = false // 新响应开始，重置正文标记
+			continue
+		}
+
+		// 4. 处理头部和正文
+		if currentTx != nil {
+			// 空行表示头部结束，正文开始
+			if strings.TrimSpace(line) == "" {
+				isBody = true
+				continue
+			}
+
+			if !isBody {
+				// 头部处理
+				if idx := strings.Index(line, ":"); idx > 0 {
+					key := strings.TrimSpace(line[:idx])
+					value := strings.TrimSpace(line[idx+1:])
+
+					if currentTx.Response == nil && currentTx.Request != nil {
+						if currentTx.Request.Headers == nil {
+							currentTx.Request.Headers = make(map[string]string)
+						}
+						currentTx.Request.Headers[key] = value
+					} else if currentTx.Response != nil {
+						if currentTx.Response.Headers == nil {
+							currentTx.Response.Headers = make(map[string]string)
+						}
+						currentTx.Response.Headers[key] = value
+					}
+				}
+			} else {
+				// 正文处理
+				if currentTx.Response == nil && currentTx.Request != nil {
+					currentTx.Request.Body += line + "\n"
+				} else if currentTx.Response != nil {
+					currentTx.Response.Body += line + "\n"
+				}
+			}
+		}
+	}
+
+	// 处理最后未完成的事务
+	if currentTx != nil && currentTx.Request != nil {
+		l.ProcessCompleteTransaction(currentTx)
+	}
+}
+
+func (l *AgentRunLogic) ParseRequestLine(line string) *HTTPRequest {
+	parts := strings.SplitN(line, " ", 3)
+	if len(parts) < 3 {
+		return nil
+	}
+	return &HTTPRequest{
+		Method: parts[0],
+		URL:    parts[1],
+	}
+}
+
+func (l *AgentRunLogic) ParseResponseLine(line string) *HTTPResponse {
+	parts := strings.SplitN(line, " ", 3)
+	if len(parts) < 3 {
+		return nil
+	}
+	return &HTTPResponse{
+		Status: parts[1] + " " + parts[2],
+	}
+}
+
+func (l *AgentRunLogic) ProcessCompleteTransaction(tx *HTTPTransaction) {
+	// 1. 记录原始数据（调试用）
+	jsonData, err := json.Marshal(tx)
+	if err != nil {
+		l.Errorf("JSON序列化失败: %v", err)
+		return
+	}
+	l.Debugf("捕获到的流量: %s", string(jsonData))
+
+	// 2. 发送到Elasticsearch
+	if err := l.SendDataToElasticsearch(tx); err != nil {
+		l.Errorf("发送到ES失败: %v", err)
+		// 可以添加重试逻辑或死信队列处理
+		return
+	}
+
+	l.Infof("成功记录事务: %s %s → %s",
+		tx.Request.Method,
+		tx.Request.URL,
+		tx.Response.Status)
+}
+func (l *AgentRunLogic) SendDataToElasticsearch(tx *HTTPTransaction) error {
+	if l.svcCtx.ESClient == nil {
+		return errorx.NewDefaultError("Elasticsearch client not initialized")
+	}
+	statusCode, _ := strconv.Atoi(strings.Split(tx.Response.Status, " ")[0])
+	// 1. 准备要索引的文档
+	doc := map[string]interface{}{
+		"@timestamp": time.Now().Format(time.RFC3339),
+		"request": map[string]interface{}{
+			"method":  tx.Request.Method,
+			"url":     tx.Request.URL,
+			"headers": tx.Request.Headers,
+			"body":    tx.Request.Body,
+		},
+		"response": map[string]interface{}{
+			"status":  statusCode,
+			"headers": tx.Response.Headers,
+			"body":    tx.Response.Body,
+		},
+	}
+
+	// 2. 序列化为JSON
+	data, err := json.Marshal(doc)
+	if err != nil {
+		return fmt.Errorf("JSON序列化失败: %w", err)
+	}
+
+	// 3. 构建ES请求
+	req := esapi.IndexRequest{
+		Index:      l.svcCtx.Config.ElasticSearch.Index + time.Now().Format(time.DateOnly), // 索引名称
+		DocumentID: "",                                                                     // 空ID让ES自动生成
+		Body:       bytes.NewReader(data),
+		Refresh:    "false", // 生产环境建议关闭立即刷新
+	}
+
+	// 4. 执行请求
+	res, err := req.Do(context.Background(), l.svcCtx.ESClient)
+	if err != nil {
+		return fmt.Errorf("ES请求失败: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.IsError() {
+		return fmt.Errorf("ES错误响应: %s", res.String())
+	}
+
+	return nil
+}

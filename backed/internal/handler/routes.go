@@ -4,7 +4,7 @@ package handler
 import (
 	"net/http"
 
-	gsomo "github.com/qianjisantech/gosmo/internal/handler/gsomo"
+	traffic "github.com/qianjisantech/gosmo/internal/handler/traffic"
 	"github.com/qianjisantech/gosmo/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -15,10 +15,10 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/kafka/producer/sync",
-				Handler: gsomo.KafkaSyncProducerHandler(serverCtx),
+				Path:    "/traffic/pool/page",
+				Handler: traffic.TrafficPoolQueryPageHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/gsomo"),
+		rest.WithPrefix("/gosmo"),
 	)
 }

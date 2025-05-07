@@ -1,0 +1,13 @@
+gor --input-raw :8080  --output-http-elasticsearch localhost:9200/gosmo
+
+./gor.exe  --input-raw :8888 --input-raw-track-response  --output-http-elasticsearch='http://47.94.96.190:9200'
+
+
+./gor.exe  --input-raw :8888 --input-raw-track-response --output-file ./input.gor | ./gor.exe file2json input.gor > input.json
+
+
+--input-raw
+:8888
+--input-raw-track-response
+--output-http-elasticsearch='http://47.94.96.190:9200/gosmo'
+--output-stdout

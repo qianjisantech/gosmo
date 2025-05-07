@@ -36,13 +36,22 @@ const router = createRouter({
 });
 
 router.beforeEach(to => {
-  const token = storage.get('Access-Token')
+  // const token = storage.get('Access-Token')
 
-  if (!token && to.name !== 'Login') {
-    return { name: 'Login' }
-  } else if (token && to.name === 'Login') {
-    return { name: 'Index' }
-  } else if (token && !store.state.user.hasGetRoute) {
+  // if (!token && to.name !== 'Login') {
+  //   return { name: 'Login' }
+  // } else if (token && to.name === 'Login') {
+  //   return { name: 'Index' }
+  // } else if (token && !store.state.user.hasGetRoute) {
+  //   return store.dispatch('getUserInfo').then(() => {
+  //     const routersTree = listToTree(store.state.user.routeList);
+  //     const routerMap = generator(routersTree)
+  //     rootRouter.children = [ ...rootRouter.children, ...routerMap ];
+  //     router.addRoute(rootRouter)
+  //     return to.fullPath
+  //   })
+  // }
+  if (!store.state.user.hasGetRoute) {
     return store.dispatch('getUserInfo').then(() => {
       const routersTree = listToTree(store.state.user.routeList);
       const routerMap = generator(routersTree)

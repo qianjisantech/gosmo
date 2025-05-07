@@ -1,0 +1,75 @@
+1 f21822b800000001ca7f8392 1745770160283238000 0
+POST /api/auth/email/register HTTP/1.1
+Content-Type: application/json
+User-Agent: PostmanRuntime/7.43.3
+Accept: */*
+Postman-Token: 834c764e-e810-4cfe-8056-3e2c017e4df4
+Host: localhost:8888
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 67
+
+{
+    "email":"philip.shen@jtexpress.com",
+    "code":"751313"
+}
+🐵🙈🙉
+2 f21822b800000001ca7f8392 1745770160559517000 0
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Traceparent: 00-4b83a24e2266c6daad7e028d24371b2f-9e1a36bc6accb8a0-00
+Date: Sun, 27 Apr 2025 16:09:20 GMT
+Content-Length: 48
+
+{"success":false,"message":"验证码不正确"}
+🐵🙈🙉
+1 f27022b8000000019086f75f 1745770191383066000 0
+POST /api/auth/email/register HTTP/1.1
+Content-Type: application/json
+User-Agent: PostmanRuntime/7.43.3
+Accept: */*
+Postman-Token: ea9aa0e9-f2bd-496a-bae4-d3c74cd2354d
+Host: localhost:8888
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 67
+
+{
+    "email":"philip.shen@jtexpress.com",
+    "code":"751313"
+}
+🐵🙈🙉
+2 f27022b8000000019086f75f 1745770191631807000 0
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Traceparent: 00-c8c636c2f0105d121c257fa068058590-968cabfebaeecfc6-00
+Date: Sun, 27 Apr 2025 16:09:51 GMT
+Content-Length: 48
+
+{"success":false,"message":"验证码不正确"}
+🐵🙈🙉
+1 f27022b8000000019086f850 1745770192466030000 0
+POST /api/auth/email/register HTTP/1.1
+Content-Type: application/json
+User-Agent: PostmanRuntime/7.43.3
+Accept: */*
+Postman-Token: d71f2c08-894d-49ae-97db-9e1fc49eb9a6
+Host: localhost:8888
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 67
+
+{
+    "email":"philip.shen@jtexpress.com",
+    "code":"751313"
+}
+🐵🙈🙉
+2 f27022b8000000019086f850 1745770192738346000 0
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Traceparent: 00-fa3488f6cf7a9827e82b060de626e6e5-92e2ff8bcdd180aa-00
+Date: Sun, 27 Apr 2025 16:09:52 GMT
+Content-Length: 48
+
+{"success":false,"message":"验证码不正确"}
+🐵🙈🙉
