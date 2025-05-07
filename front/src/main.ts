@@ -9,7 +9,6 @@ import 'element-plus/dist/index.css'
 // 创建 Vue 应用
 const app = createApp(App);
 
-// 注册插件和组件
 app.use(router); // 使用路由
 app.use(Antd); // 使用 Ant Design Vue
 app.use(ElementPlus)
