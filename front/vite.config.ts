@@ -4,9 +4,8 @@ import { resolve } from 'path'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
-
-  // ✅ 生产环境直接使用真实 API，开发环境走代理
   const API_BASE_URL = env.VITE_API_BASE_URL || 'https://mock.mengxuegu.com/mock/681b2cb1d5b98b579eb29a0f/gosmo'
+  console.log('API_BASE_URL:', API_BASE_URL) // 确认输出正确
 
   return {
     plugins: [vue()],
@@ -14,10 +13,10 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       port: 5180,
       proxy: {
-        '/api/': {
-          target: 'https://mock.mengxuegu.com/mock/681b2cb1d5b98b579eb29a0f/gosmo',
+        '/api': {
+          target: API_BASE_URL,
           changeOrigin: true,
-          // rewrite: (path) => path.replace(/^\/api/, ''),
+          rewrite: (path) => path.replace(/^\/api/, '') // 去掉 /api 前缀（根据后端要求调整）
         }
       }
     },
@@ -25,9 +24,6 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': resolve(__dirname, './src')
       }
-    },
-    define: {
-      'process.env.VITE_API_BASE_URL': JSON.stringify(API_BASE_URL)
     }
   }
 })
