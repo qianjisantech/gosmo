@@ -51,7 +51,7 @@
         >
           <template #expandedRowRender="{ record }">
             <a-descriptions title="请求信息" bordered>
-              <a-descriptions-item label="请求体" :span="2">
+              <a-descriptions-item label="请求体" :span="10">
                 <pre>{{ record.request.body || '无请求体' }}</pre>
               </a-descriptions-item>
               <a-descriptions-item label="请求头" :span="2">
@@ -67,9 +67,6 @@
                       <span v-if="!isSensitiveKey(headerRecord.key)" class="header-value">
                         {{ headerRecord.value }}
                       </span>
-                      <span v-else class="sensitive-value">
-                        ​********
-                      </span>
                     </template>
                   </template>
                 </a-table>
@@ -77,7 +74,7 @@
             </a-descriptions>
 
             <a-descriptions title="响应信息" bordered style="margin-top: 16px">
-              <a-descriptions-item label="响应体" :span="2">
+              <a-descriptions-item label="响应体" :span="10">
                 <pre>{{ record.response.body || '无响应体' }}</pre>
               </a-descriptions-item>
               <a-descriptions-item label="响应头" :span="2">
@@ -92,9 +89,6 @@
                     <template v-if="column.dataIndex === 'value'">
                       <span v-if="!isSensitiveKey(headerRecord.key)" class="header-value">
                         {{ headerRecord.value }}
-                      </span>
-                      <span v-else class="sensitive-value">
-                        ​********
                       </span>
                     </template>
                   </template>
