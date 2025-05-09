@@ -60,7 +60,7 @@ type ElasticsearchResponse struct {
 
 func (l *TrafficPoolQueryPageLogic) TrafficPoolQueryPage(req *types.TrafficPoolQueryPageRequest) (resp *types.TrafficPoolQueryPageResp, err error) {
 	// Elasticsearch配置
-	esURL := "http://47.94.96.190:9200"
+	esURL := "http://101.201.116.86:9200"
 	indexName := "gosmo"
 
 	// 构建请求URL
