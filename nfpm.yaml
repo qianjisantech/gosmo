@@ -1,0 +1,21 @@
+# nfpm example config file
+#
+# check https://nfpm.goreleaser.com/configuration for detailed usage
+#
+name: "GoReplay"
+arch: ${PLATFORM}
+platform: "linux"
+version: ${VERSION}
+section: "default"
+priority: "extra"
+provides:
+- goreplay
+maintainer: "Leonid Bugaev <hello@goreplay.org>"
+description: |
+ GoReplay is the simplest and safest way to test your app using real traffic before you put it into production. 
+vendor: "GoReplay"
+homepage: "https://goreplay.org"
+license: "AGPL"
+contents:
+- src: ./${BIN_NAME}
+  dst: /usr/local/bin

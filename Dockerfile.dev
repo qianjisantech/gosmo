@@ -1,0 +1,20 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+RUN apk add --no-cache \
+    gcc \
+    g++ \
+    make \
+    linux-headers \
+    bison \
+    flex \
+    git \
+    wget
+
+RUN wget http://www.tcpdump.org/release/libpcap-1.10.0.tar.gz && tar xzf libpcap-1.10.0.tar.gz && cd libpcap-1.10.0 && ./configure && make install
+
+WORKDIR /go/src/github.com/buger/goreplay/
+ADD . /go/src/github.com/buger/goreplay/
+
+RUN go get golang.org/x/lint/golint
+RUN go get

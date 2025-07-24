@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: goreplay-daemon
+spec:
+  selector:
+    matchLabels:
+      app: goreplay
+  template:
+    metadata:
+      labels:
+        app: goreplay
+    spec:
+      hostNetwork: true
+      serviceAccountName: goreplay
+      containers:
+      - name: goreplay
+        image: buger/gor:v2.0.0-rc4
+        args:
+        - "--input-raw k8s://deployments/nginx:80"
+        - "--output-stdout"
+        - "--verbose"
