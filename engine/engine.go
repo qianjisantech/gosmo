@@ -6,10 +6,12 @@ import (
 	"flag"
 	"fmt"
 	recorder "github.com/qianjisantech/gosmo"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"runtime/pprof"
+	"sync"
 	"time"
 )
 
@@ -21,57 +23,133 @@ var (
 type InputRAWConfig struct {
 	TrackResponse bool
 }
+
 type RecorderEngine struct {
 	Port           string
 	OutputStdout   bool
 	InputRAWConfig InputRAWConfig
+
+	// 新增字段
+	closeCh      chan struct{}
+	emitter      *recorder.Emitter
+	plugins      *recorder.InOutPlugins
+	stopOnce     sync.Once
+	isRunning    bool
+	runningMutex sync.Mutex
 }
 
 func (rg *RecorderEngine) Start() error {
-	var plugins *recorder.InOutPlugins
+	rg.runningMutex.Lock()
+	defer rg.runningMutex.Unlock()
+
+	if rg.isRunning {
+		return fmt.Errorf("engine is already running")
+	}
+
+	rg.closeCh = make(chan struct{})
 	recorder.Settings.InputRAW = []string{rg.Port}
 	recorder.Settings.OutputStdout = rg.OutputStdout
 	recorder.Settings.InputRAWConfig.TrackResponse = rg.InputRAWConfig.TrackResponse
+
 	flag.Parse()
 	recorder.CheckSettings()
-	plugins = recorder.NewPlugins()
+	rg.plugins = recorder.NewPlugins()
 
 	log.Printf("[PPID %d and PID %d] Version:%s\n", os.Getppid(), os.Getpid(), recorder.VERSION)
-	log.Printf("录制%v", plugins.Inputs)
-	log.Printf("输出%v", plugins.Outputs)
-	if len(plugins.Inputs) == 0 || len(plugins.Outputs) == 0 {
+	log.Printf("录制%v", rg.plugins.Inputs)
+	log.Printf("输出%v", rg.plugins.Outputs)
 
-		log.Fatal("Required at least 1 input and 1 output")
-		return fmt.Errorf("Required at least 1 input and 1 output  %v", plugins)
+	if len(rg.plugins.Inputs) == 0 || len(rg.plugins.Outputs) == 0 {
+		return fmt.Errorf("required at least 1 input and 1 output")
 	}
 
+	// 性能分析
 	if *memprofile != "" {
 		profileMEM(*memprofile)
 	}
-
 	if *cpuprofile != "" {
 		profileCPU(*cpuprofile)
 	}
 
+	// pprof 服务
 	if recorder.Settings.Pprof != "" {
 		go func() {
 			log.Println(http.ListenAndServe(recorder.Settings.Pprof, nil))
 		}()
 	}
 
-	closeCh := make(chan int)
-	emitter := recorder.NewEmitter()
-	go emitter.Start(plugins, recorder.Settings.Middleware)
+	// 启动 emitter
+	rg.emitter = recorder.NewEmitter()
+	go rg.emitter.Start(rg.plugins, recorder.Settings.Middleware)
+
+	// 设置超时自动关闭
 	if recorder.Settings.ExitAfter > 0 {
 		log.Printf("Running gor for a duration of %s\n", recorder.Settings.ExitAfter)
-
 		time.AfterFunc(recorder.Settings.ExitAfter, func() {
 			log.Printf("gor run timeout %s\n", recorder.Settings.ExitAfter)
-			close(closeCh)
+			rg.Stop()
 		})
 	}
+
+	rg.isRunning = true
 	return nil
 }
+
+// Stop 停止录制引擎
+func (rg *RecorderEngine) Stop() error {
+	rg.runningMutex.Lock()
+	defer rg.runningMutex.Unlock()
+
+	if !rg.isRunning {
+		return nil
+	}
+
+	var stopErr error
+	rg.stopOnce.Do(func() {
+		log.Println("Stopping recorder engine...")
+
+		// 关闭 emitter
+		if rg.emitter != nil {
+			rg.emitter.Close()
+		}
+
+		// 关闭 plugins
+		if rg.plugins != nil {
+			for _, input := range rg.plugins.Inputs {
+				if closer, ok := input.(io.Closer); ok {
+					if err := closer.Close(); err != nil {
+						stopErr = fmt.Errorf("input close error: %v", err)
+					}
+				}
+			}
+			for _, output := range rg.plugins.Outputs {
+				if closer, ok := output.(io.Closer); ok {
+					if err := closer.Close(); err != nil {
+						stopErr = fmt.Errorf("output close error: %v", err)
+					}
+				}
+			}
+		}
+
+		// 关闭通道
+		if rg.closeCh != nil {
+			close(rg.closeCh)
+		}
+
+		rg.isRunning = false
+		log.Println("Recorder engine stopped")
+	})
+
+	return stopErr
+}
+
+// IsRunning 检查引擎是否在运行
+func (rg *RecorderEngine) IsRunning() bool {
+	rg.runningMutex.Lock()
+	defer rg.runningMutex.Unlock()
+	return rg.isRunning
+}
+
 func profileCPU(cpuprofile string) {
 	if cpuprofile != "" {
 		f, err := os.Create(cpuprofile)
