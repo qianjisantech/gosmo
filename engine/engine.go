@@ -25,10 +25,11 @@ type InputRAWConfig struct {
 }
 
 type RecorderEngine struct {
-	Port           string
-	OutputStdout   bool
-	InputRAWConfig InputRAWConfig
+	Port string
 
+	OutputStdout      bool
+	InputRAWConfig    InputRAWConfig
+	OutputKafkaConfig recorder.OutputKafkaConfig
 	// 新增字段
 	closeCh      chan struct{}
 	emitter      *recorder.Emitter
@@ -50,7 +51,7 @@ func (rg *RecorderEngine) Start() error {
 	recorder.Settings.InputRAW = []string{rg.Port}
 	recorder.Settings.OutputStdout = rg.OutputStdout
 	recorder.Settings.InputRAWConfig.TrackResponse = rg.InputRAWConfig.TrackResponse
-
+	recorder.Settings.OutputKafkaConfig = rg.OutputKafkaConfig
 	flag.Parse()
 	recorder.CheckSettings()
 	rg.plugins = recorder.NewPlugins()
