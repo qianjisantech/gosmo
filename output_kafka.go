@@ -88,6 +88,7 @@ func (o *KafkaOutput) PluginWrite(msg *Message) (n int, err error) {
 		}
 		jsonMessage, _ := json.Marshal(&kafkaMessage)
 		message = sarama.StringEncoder(byteutils.SliceToString(jsonMessage))
+		log.Printf("message%s", message)
 	}
 
 	o.producer.Input() <- &sarama.ProducerMessage{
