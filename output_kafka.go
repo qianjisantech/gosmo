@@ -93,6 +93,7 @@ func (o *KafkaOutput) PluginWrite(msg *Message) (n int, err error) {
 
 	o.producer.Input() <- &sarama.ProducerMessage{
 		Topic: o.config.Topic,
+		Key:   o.config.Key,
 		Value: message,
 	}
 

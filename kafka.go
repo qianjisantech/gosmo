@@ -42,6 +42,7 @@ type OutputKafkaConfig struct {
 	Topic      string `json:"output-kafka-topic"`
 	UseJSON    bool   `json:"output-kafka-json-format"`
 	SASLConfig SASLKafkaConfig
+	Key        sarama.Encoder `json:"output-kafka-key"`
 }
 
 // KafkaTLSConfig should contains TLS certificates for connecting to secured Kafka clusters
