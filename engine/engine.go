@@ -1,5 +1,3 @@
-// Gor is simple http traffic replication tool written in Go. Its main goal to replay traffic from production servers to staging and dev environments.
-// Now you can test your code on real user sessions in an automated and repeatable fashion.
 package engine
 
 import (
@@ -18,6 +16,8 @@ import (
 var (
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 	memprofile = flag.String("memprofile", "", "write memory profile to this file")
+	engines    = make(map[int]*RecorderEngine)
+	enginesMux sync.Mutex
 )
 
 type InputRAWConfig struct {
@@ -25,8 +25,7 @@ type InputRAWConfig struct {
 }
 
 type RecorderEngine struct {
-	Port string
-
+	Port              string
 	OutputStdout      bool
 	InputRAWConfig    InputRAWConfig
 	OutputKafkaConfig recorder.OutputKafkaConfig
@@ -37,14 +36,15 @@ type RecorderEngine struct {
 	stopOnce     sync.Once
 	isRunning    bool
 	runningMutex sync.Mutex
+	pid          int
 }
 
-func (rg *RecorderEngine) Start() error {
+func (rg *RecorderEngine) Start() (int, error) {
 	rg.runningMutex.Lock()
 	defer rg.runningMutex.Unlock()
 
 	if rg.isRunning {
-		return fmt.Errorf("engine is already running")
+		return 0, fmt.Errorf("engine is already running")
 	}
 
 	rg.closeCh = make(chan struct{})
@@ -56,12 +56,17 @@ func (rg *RecorderEngine) Start() error {
 	recorder.CheckSettings()
 	rg.plugins = recorder.NewPlugins()
 
-	log.Printf("[PPID %d and PID %d] Version:%s\n", os.Getppid(), os.Getpid(), recorder.VERSION)
+	rg.pid = os.Getpid()
+	enginesMux.Lock()
+	engines[rg.pid] = rg
+	enginesMux.Unlock()
+
+	log.Printf("[PPID %d and PID %d] Version:%s\n", os.Getppid(), rg.pid, recorder.VERSION)
 	log.Printf("录制%v", rg.plugins.Inputs)
 	log.Printf("输出%v", rg.plugins.Outputs)
 
 	if len(rg.plugins.Inputs) == 0 || len(rg.plugins.Outputs) == 0 {
-		return fmt.Errorf("required at least 1 input and 1 output")
+		return 0, fmt.Errorf("required at least 1 input and 1 output")
 	}
 
 	// 性能分析
@@ -83,21 +88,20 @@ func (rg *RecorderEngine) Start() error {
 	rg.emitter = recorder.NewEmitter()
 	go rg.emitter.Start(rg.plugins, recorder.Settings.Middleware)
 
-	// 设置超时自动关闭
-	if recorder.Settings.ExitAfter > 0 {
-		log.Printf("Running gor for a duration of %s\n", recorder.Settings.ExitAfter)
-		time.AfterFunc(recorder.Settings.ExitAfter, func() {
-			log.Printf("gor run timeout %s\n", recorder.Settings.ExitAfter)
-			rg.Stop()
-		})
-	}
-
 	rg.isRunning = true
-	return nil
+	return rg.pid, nil
 }
 
 // Stop 停止录制引擎
-func (rg *RecorderEngine) Stop() error {
+func (rg *RecorderEngine) Stop(pid int) error {
+	enginesMux.Lock()
+	rg, exists := engines[pid]
+	enginesMux.Unlock()
+
+	if !exists {
+		return fmt.Errorf("engine with PID %d not found", pid)
+	}
+
 	rg.runningMutex.Lock()
 	defer rg.runningMutex.Unlock()
 
@@ -107,7 +111,7 @@ func (rg *RecorderEngine) Stop() error {
 
 	var stopErr error
 	rg.stopOnce.Do(func() {
-		log.Println("Stopping recorder engine...")
+		log.Printf("Stopping recorder engine with PID %d...", pid)
 
 		// 关闭 emitter
 		if rg.emitter != nil {
@@ -138,14 +142,25 @@ func (rg *RecorderEngine) Stop() error {
 		}
 
 		rg.isRunning = false
-		log.Println("Recorder engine stopped")
+		enginesMux.Lock()
+		delete(engines, pid)
+		enginesMux.Unlock()
+		log.Printf("Recorder engine with PID %d stopped", pid)
 	})
 
 	return stopErr
 }
 
 // IsRunning 检查引擎是否在运行
-func (rg *RecorderEngine) IsRunning() bool {
+func (rg *RecorderEngine) IsRunning(pid int) bool {
+	enginesMux.Lock()
+	rg, exists := engines[pid]
+	enginesMux.Unlock()
+
+	if !exists {
+		return false
+	}
+
 	rg.runningMutex.Lock()
 	defer rg.runningMutex.Unlock()
 	return rg.isRunning
@@ -173,8 +188,14 @@ func profileMEM(memprofile string) {
 			log.Fatal(err)
 		}
 		time.AfterFunc(30*time.Second, func() {
-			pprof.WriteHeapProfile(f)
-			f.Close()
+			err := pprof.WriteHeapProfile(f)
+			if err != nil {
+				return
+			}
+			err = f.Close()
+			if err != nil {
+				return
+			}
 		})
 	}
 }
