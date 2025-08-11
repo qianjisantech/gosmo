@@ -39,4 +39,4 @@ case <-quit:
 case <- l.Reading: // if we have started reading
 }
 */
-package capture
+package capture // import github.com/buger/goreplay/capture

@@ -22,4 +22,4 @@ you can use pool.End or/and pool.Start to set custom session behaviors
 debugLevel in debugger function indicates the priority of the logs, the bigger the number the lower
 the priority. errors are signified by debug level 4 for errors, 5 for discarded packets, and 6 for received packets.
 */
-package tcp
+package tcp // import github.com/buger/goreplay/tcp
