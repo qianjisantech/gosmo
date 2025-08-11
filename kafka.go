@@ -12,7 +12,7 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/Shopify/sarama"
+	"github.com/IBM/sarama"
 	"github.com/xdg-go/scram"
 )
 

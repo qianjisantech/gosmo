@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Shopify/sarama"
-	"github.com/Shopify/sarama/mocks"
+	"github.com/IBM/sarama"
+	"github.com/IBM/sarama/mocks"
 )
 
 // KafkaOutput is used for sending payloads to kafka in JSON format.

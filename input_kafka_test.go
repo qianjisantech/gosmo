@@ -3,8 +3,8 @@ package gosmo
 import (
 	"testing"
 
-	"github.com/Shopify/sarama"
-	"github.com/Shopify/sarama/mocks"
+	"github.com/IBM/sarama"
+	"github.com/IBM/sarama/mocks"
 )
 
 func TestInputKafkaRAW(t *testing.T) {
