@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/buger/goreplay/internal/size"
+	"gosmo/internal/size"
 )
 
 var _ PluginWriter = (*BinaryOutput)(nil)

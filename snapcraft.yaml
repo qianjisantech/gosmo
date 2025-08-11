@@ -13,7 +13,7 @@ parts:
   goreplay:
     plugin: go
     source: https://github.com/buger/goreplay.git
-    go-importpath: github.com/buger/goreplay
+    go-importpath:
     build-packages:
       - build-essential
       - libpcap-dev

@@ -18,10 +18,11 @@ require (
 	k8s.io/client-go v0.27.1
 )
 
+require github.com/buger/goreplay v1.3.2
+
 require (
 	github.com/araddon/gou v0.0.0-20211019181548-e7d08105776c // indirect
 	github.com/bitly/go-hostpool v0.1.0 // indirect
-	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/eapache/go-resiliency v1.3.0 // indirect
