@@ -1,4 +1,4 @@
-module gosmo
+module github.com/qianjisantech/gosmo
 
 go 1.24.0
 
@@ -12,7 +12,6 @@ require (
 	github.com/google/gopacket v1.1.20-0.20210429153827-3eaba0894325
 	github.com/gorilla/websocket v1.5.4-0.20250319132907-e064f32e3674
 	github.com/mattbaird/elastigo v0.0.0-20170123220020-2fe47fd29e4b
-	github.com/qianjisantech/gosmo v0.0.9
 	github.com/stretchr/testify v1.10.0
 	github.com/xdg-go/scram v1.1.2
 	golang.org/x/net v0.40.0
@@ -22,7 +21,6 @@ require (
 )
 
 require (
-	github.com/Shopify/sarama v1.38.1 // indirect
 	github.com/araddon/gou v0.0.0-20211019181548-e7d08105776c // indirect
 	github.com/bitly/go-hostpool v0.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
